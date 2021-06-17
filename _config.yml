@@ -52,7 +52,7 @@ show_description: true
 show_image: true
 
 # Set this to true to turn on annotations with hypothes.is (https://web.hypothes.is/)
-annotations: false
+annotations: true
 
 # Set this to true to display tags on each post
 show_tags: true
@@ -72,7 +72,7 @@ include:
 # This specifies what badges are turned on by default for notebook posts.
 default_badges:
   github: true
-  binder: true
+  binder: false
   colab: true
 
 # Escape HTML in post descriptions
