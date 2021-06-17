@@ -4,8 +4,7 @@ title: About Me
 permalink: /about/
 ---
 
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
+Hi, Im Minh. Welcome to my NLP365 project. This is where I document all the things I have learned and researched about NLP and ML in general.
 
 
 
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
