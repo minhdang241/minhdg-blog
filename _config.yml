@@ -39,8 +39,8 @@ baseurl: "/minhdg-blog" # the subpath of your site, e.g. "/blog".
 # Github and twitter are optional:
 minima:
   social_links:
-    twitter: https://twitter.com/MinhDan18587327
-    github: https://github.com/minhdang241
+    twitter: MinhDan18587327
+    github: minhdang241
 
 # Set this to true to get LaTeX math equation support
 use_math: true
