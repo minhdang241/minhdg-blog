@@ -4,19 +4,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Word Embeddings Overview | NLP365</title>
+<title>Word Embeddings (Word2Vec) [Part1] | NLP365</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Word Embeddings Overview" />
+<meta property="og:title" content="Word Embeddings (Word2Vec) [Part1]" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general." />
-<meta property="og:description" content="NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general." />
-<link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html" />
-<meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html" />
+<meta name="description" content="Implement Word2Vec using Pytorch and Gensim." />
+<meta property="og:description" content="Implement Word2Vec using Pytorch and Gensim." />
+<link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/implementation/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html" />
+<meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/implementation/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html" />
 <meta property="og:site_name" content="NLP365" />
+<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/word2vec.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-07-26T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general.","url":"https://minhdang241.github.io/minhdg-blog/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html"},"headline":"Word Embeddings Overview","dateModified":"2021-07-26T00:00:00-05:00","datePublished":"2021-07-26T00:00:00-05:00","@context":"https://schema.org"}</script>
+{"description":"Implement Word2Vec using Pytorch and Gensim.","url":"https://minhdang241.github.io/minhdg-blog/implementation/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/implementation/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html"},"headline":"Word Embeddings (Word2Vec) [Part1]","dateModified":"2021-07-26T00:00:00-05:00","datePublished":"2021-07-26T00:00:00-05:00","image":"https://minhdang241.github.io/minhdg-blog/images/word2vec.png","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -87,39 +88,42 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Word Embeddings Overview</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-07-26T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Word Embeddings (Word2Vec) [Part1]</h1><p class="page-description">Implement Word2Vec using Pytorch and Gensim.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-07-26T00:00:00-05:00" itemprop="datePublished">
         Jul 26, 2021
       </time>
        • <span class="read-time" title="Estimated read time">
     
     
-      7 min read
+      10 min read
     
 </span></p>
 
     
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#implementation">implementation</a>
+        
+      
+      </p>
+    
 
     
-      
-        <div class="pb-5 d-flex flex-wrap flex-justify-end">
-          <div class="px-2">
-
-    <a href="https://github.com/minhdang241/minhdg-blog/tree/master/_notebooks/2021-07-26-NLP_6_Word_Embeddings_(Word2Vec)_[Part_1].ipynb" role="button" target="_blank">
-<img class="notebook-badge-image" src="/minhdg-blog/assets/badges/github.svg" alt="View On GitHub">
-    </a>
-</div>
-
-          
-          <div class="px-2">
-    <a href="https://colab.research.google.com/github/minhdang241/minhdg-blog/blob/master/_notebooks/2021-07-26-NLP_6_Word_Embeddings_(Word2Vec)_[Part_1].ipynb" target="_blank">
-        <img class="notebook-badge-image" src="/minhdg-blog/assets/badges/colab.svg" alt="Open In Colab"/>
-    </a>
-</div>
-        </div>
       </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <!--
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Word-Embeddings-Overview">Word Embeddings Overview </a></li>
+<li class="toc-entry toc-h1"><a href="#Word2Vec">Word2Vec </a></li>
+<li class="toc-entry toc-h1"><a href="#Continuous-Bag-of-words-(CBOW)-(Pytorch)">Continuous Bag-of-words (CBOW) (Pytorch) </a></li>
+<li class="toc-entry toc-h1"><a href="#Skip-gram-(Pytorch)">Skip-gram (Pytorch) </a></li>
+<li class="toc-entry toc-h1"><a href="#Word2Vec-(Gensim)">Word2Vec (Gensim) </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Example-of-Gensim-Word2Vec-functions">Example of Gensim Word2Vec functions </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Visualize-the-Word-Embeddings-using-tSNE">Visualize the Word Embeddings using tSNE </a></li>
+<li class="toc-entry toc-h1"><a href="#Using-Pretrained-Word2Vec-in-Pytorch">Using Pretrained Word2Vec in Pytorch </a></li>
+</ul><!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
@@ -128,16 +132,65 @@ window.onload = wrap_img;
 
 <div class="container" id="notebook-container">
         
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Word2Vec">Word2Vec<a class="anchor-link" href="#Word2Vec"> </a></h1><p>Word2Vec is one the approaches to develop a word embedding. There are two algorithms used in Word2Vec: <strong>continuous bag-of-words</strong> (CBOW) and <strong>skip-gram</strong>. CBOW aims to predict a center word from the surrounding context in terms of word vectors. Skip-gram does the opposite, and predicts the probability of context words from a center word. In this post, we will try to implement both.</p>
+<p>The full notebook is available <a href="https://github.com/minhdang241/minhdg-blog/blob/master/_notebooks/2021-07-26-NLP_6_Word_Embeddings_(Word2Vec">here</a>_%5BPart_1%5D.ipynb).</p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Continuous-Bag-of-words-(CBOW)-(Pytorch)">Continuous Bag-of-words (CBOW) (Pytorch)<a class="anchor-link" href="#Continuous-Bag-of-words-(CBOW)-(Pytorch)"> </a></h1><p>The algorithm aims to predict a center word give the surrounding context in terms of word vectors. For example, given a sentence "The cat jumped over the puddle", the algorithm treats {"The", "cat", "over", "the", "puddle"} as context words and {"jumped"} as the center word. The objective is to generate the center word from context words.</p>
+<h1 id="Word-Embeddings-Overview">
+<a class="anchor" href="#Word-Embeddings-Overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word Embeddings Overview<a class="anchor-link" href="#Word-Embeddings-Overview"> </a>
+</h1>
+<p>Word embeddings are dense vectors of real numbers, one for each word in the vocabulary, which is the collection of words extracted from the dataset.</p>
+<p>There are many ways to represent a word on a computer. For example, we can use ASCII code. Yet, it only tells what the word is, not its meaning. Another option is to use a one-hot vector to represent a word, in which we put the number 1 in the location of the represented word. However, using a one-hot vector has 2 main drawbacks. First of all, the vector is huge and sparse. The size of the vector is the same as the size of the vocabulary. The vector is sparse since there is only one position that has a non-zero value. Next, it treats all words independently, with no relation to each other. Technically said it does not provide any notion of <em>similarity</em> between words.</p>
+<p>Take an example from Pytorch documentation:</p>
+<blockquote>
+<p>Suppose we are building a language model. Suppose we have seen the sentences.</p>
+<ul>
+<li>The mathematician ran to the store.</li>
+<li>The physicist ran to the store.</li>
+<li>The mathematician solved the open problem.</li>
+</ul>
+<p>In the training data, suppose we get the sentence never seen before:* The physicist solved the open problem.Our language model might be doing OK on this sentence. But it's better if we can use the following facts:</p>
+<ol>
+<li>We have seen the mathematician and physicist in the same role in the sentence. As a result, they can have a semantic relation somehow.</li>
+<li>We have seen mathematicians in the same role in this new unseen sentence as we are now seeing physicists.<blockquote>
+<p>That infers the physicist is a good fit in the new unseen sentence. That's what we mean by <em>semantic similarity</em>. That relies on the assumption that:<strong><em>words appearing in similar contexts are related to each other semantically</em></strong> 
+To encode the similarity between words we can think up some semantic attributes. We then put those attributes in the vector and give a score for each. We give high scores for shared attributes and low scores for the counterparts. We can measure the similarity between two word vectors using the dot product. As a result, similar words will have a similarity score near 1 and different words will have a similarity score near zero.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<p>Since thinking of the semantic attributes is hard and manually intensive, we can let them be the parameters in the network and be updated during training. One drawback of doing this way is the attribute scores are not interpretable. That is, we do not know what is attribute that a specific score represents.</p>
+<p>In summary, <strong>word embeddings are a representation of the semantics of a word, efficiently encoding semantic information that might be relevant to the task at hand</strong></p>
+<p>To read more about word embeddings in Pytorch, click <a href="https://pytorch.org/tutorials/beginner/nlp/word_embeddings_tutorial.html">here</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Word2Vec">
+<a class="anchor" href="#Word2Vec" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word2Vec<a class="anchor-link" href="#Word2Vec"> </a>
+</h1>
+<p>Word2Vec is one the approaches to develop a word embedding. There are two algorithms used in Word2Vec: <strong>continuous bag-of-words</strong> (CBOW) and <strong>skip-gram</strong>. CBOW aims to predict a center word from the surrounding context in terms of word vectors. Skip-gram does the opposite, and predicts the probability of context words from a center word. In this post, we will try to implement both.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Continuous-Bag-of-words-(CBOW)-(Pytorch)">
+<a class="anchor" href="#Continuous-Bag-of-words-(CBOW)-(Pytorch)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Continuous Bag-of-words (CBOW) (Pytorch)<a class="anchor-link" href="#Continuous-Bag-of-words-(CBOW)-(Pytorch)"> </a>
+</h1>
+<p>The algorithm aims to predict a center word give the surrounding context in terms of word vectors. For example, given a sentence "The cat jumped over the puddle", the algorithm treats {"The", "cat", "over", "the", "puddle"} as context words and {"jumped"} as the center word. The objective is to generate the center word from context words.</p>
 
 </div>
 </div>
@@ -149,7 +202,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
 <span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
@@ -188,15 +241,15 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">CONTEXT_SIZE</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 2 words to the left, 2 to the right</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">CONTEXT_SIZE</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 2 words to the left, 2 to the right</span>
 <span class="n">EMBEDDING_DIM</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">HIDDEN_DIM</span> <span class="o">=</span> <span class="mi">128</span>
-<span class="n">raw_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;We are about to study the idea of a computational process.</span>
+<span class="n">raw_text</span> <span class="o">=</span> <span class="s2">"""We are about to study the idea of a computational process.</span>
 <span class="s2">Computational processes are abstract beings that inhabit computers.</span>
 <span class="s2">As they evolve, processes manipulate other abstract things called data.</span>
 <span class="s2">The evolution of a process is directed by a pattern of rules</span>
 <span class="s2">called a program. People create programs to direct processes. In effect,</span>
-<span class="s2">we conjure the spirits of the computer with our spells.&quot;&quot;&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="s2">we conjure the spirits of the computer with our spells."""</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
 <span class="c1"># By deriving a set from `raw_text`, we deduplicate the array</span>
 <span class="n">vocab</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>
@@ -250,7 +303,7 @@ window.onload = wrap_img;
         <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total_loss</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">word_to_ix</span><span class="p">[</span><span class="s1">&#39;spirits&#39;</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">word_to_ix</span><span class="p">[</span><span class="s1">'spirits'</span><span class="p">]])</span>
 </pre></div>
 
     </div>
@@ -276,9 +329,12 @@ tensor([-0.7098, -0.6179, -0.3807,  2.3069, -0.7957,  1.4458,  0.6856,  2.1891,
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Skip-gram-(Pytorch)">Skip-gram (Pytorch)<a class="anchor-link" href="#Skip-gram-(Pytorch)"> </a></h1>
+<h1 id="Skip-gram-(Pytorch)">
+<a class="anchor" href="#Skip-gram-(Pytorch)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Skip-gram (Pytorch)<a class="anchor-link" href="#Skip-gram-(Pytorch)"> </a>
+</h1>
 </div>
 </div>
 </div>
@@ -289,15 +345,15 @@ tensor([-0.7098, -0.6179, -0.3807,  2.3069, -0.7957,  1.4458,  0.6856,  2.1891,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">CONTEXT_SIZE</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 2 words to the left, 2 to the right</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">CONTEXT_SIZE</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 2 words to the left, 2 to the right</span>
 <span class="n">EMBEDDING_DIM</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">HIDDEN_DIM</span> <span class="o">=</span> <span class="mi">128</span>
-<span class="n">raw_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;We are about to study the idea of a computational process.</span>
+<span class="n">raw_text</span> <span class="o">=</span> <span class="s2">"""We are about to study the idea of a computational process.</span>
 <span class="s2">Computational processes are abstract beings that inhabit computers.</span>
 <span class="s2">As they evolve, processes manipulate other abstract things called data.</span>
 <span class="s2">The evolution of a process is directed by a pattern of rules</span>
 <span class="s2">called a program. People create programs to direct processes. In effect,</span>
-<span class="s2">we conjure the spirits of the computer with our spells.&quot;&quot;&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="s2">we conjure the spirits of the computer with our spells."""</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
 <span class="c1"># By deriving a set from `raw_text`, we deduplicate the array</span>
 <span class="n">vocab</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>
@@ -348,7 +404,7 @@ tensor([-0.7098, -0.6179, -0.3807,  2.3069, -0.7957,  1.4458,  0.6856,  2.1891,
         <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total_loss</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">word_to_ix</span><span class="p">[</span><span class="s1">&#39;spirits&#39;</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">word_to_ix</span><span class="p">[</span><span class="s1">'spirits'</span><span class="p">]])</span>
 </pre></div>
 
     </div>
@@ -374,9 +430,13 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Word2Vec-(Gensim)">Word2Vec (Gensim)<a class="anchor-link" href="#Word2Vec-(Gensim)"> </a></h1><p>Gensim implements CBOW and using negative sampling for training by default. To toggle between CBOW and skip-gram algorithm, add this argument below when create the Word2Vec instance. <br />
+<h1 id="Word2Vec-(Gensim)">
+<a class="anchor" href="#Word2Vec-(Gensim)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word2Vec (Gensim)<a class="anchor-link" href="#Word2Vec-(Gensim)"> </a>
+</h1>
+<p>Gensim implements CBOW and using negative sampling for training by default. To toggle between CBOW and skip-gram algorithm, add this argument below when create the Word2Vec instance. <br>
 <code>sg ({0, 1}, optional) – Training algorithm: 1 for skip-gram; otherwise CBOW.</code></p>
 
 </div>
@@ -389,8 +449,8 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">gensim</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">gensim</span> 
 </pre></div>
 
     </div>
@@ -407,13 +467,13 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.test.utils</span> <span class="kn">import</span> <span class="n">datapath</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.test.utils</span> <span class="kn">import</span> <span class="n">datapath</span>
 <span class="kn">from</span> <span class="nn">gensim</span> <span class="kn">import</span> <span class="n">utils</span>
 
 <span class="k">class</span> <span class="nc">MyCorpus</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;An iterator that yields sentences&quot;&quot;&quot;</span>
+    <span class="sd">"""An iterator that yields sentences"""</span>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">corpus_path</span> <span class="o">=</span> <span class="n">datapath</span><span class="p">(</span><span class="s1">&#39;lee_background.cor&#39;</span><span class="p">)</span>
+        <span class="n">corpus_path</span> <span class="o">=</span> <span class="n">datapath</span><span class="p">(</span><span class="s1">'lee_background.cor'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">):</span>
             <span class="c1"># assume there is one document per line, tokens separated by whitespace</span>
             <span class="k">yield</span> <span class="n">utils</span><span class="o">.</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
@@ -433,7 +493,7 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">gensim</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gensim</span>
 
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">MyCorpus</span><span class="p">()</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Word2Vec</span><span class="p">(</span><span class="n">sentences</span><span class="o">=</span><span class="n">sentences</span><span class="p">,</span> <span class="n">sg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># change to 1 if prefer skip-gram</span>
@@ -453,7 +513,7 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="s1">&#39;king&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="s1">'king'</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -504,16 +564,20 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Word2Vec is unsupervised task, so there is no good way to evaluate the result. Evaluation depends on the application.</p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Example-of-Gensim-Word2Vec-functions">Example of Gensim Word2Vec functions<a class="anchor-link" href="#Example-of-Gensim-Word2Vec-functions"> </a></h2>
+<h2 id="Example-of-Gensim-Word2Vec-functions">
+<a class="anchor" href="#Example-of-Gensim-Word2Vec-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example of Gensim Word2Vec functions<a class="anchor-link" href="#Example-of-Gensim-Word2Vec-functions"> </a>
+</h2>
 </div>
 </div>
 </div>
@@ -524,8 +588,8 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">gensim.downloader</span> <span class="k">as</span> <span class="nn">api</span>
-<span class="n">wv</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;word2vec-google-news-300&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gensim.downloader</span> <span class="k">as</span> <span class="nn">api</span>
+<span class="n">wv</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'word2vec-google-news-300'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -556,10 +620,10 @@ tensor([ 0.3021,  0.2816, -1.1773,  1.0418,  1.8390, -0.5845, -0.2637,  1.3842,
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">index</span> <span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">index</span> <span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
         <span class="k">break</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;word #</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span><span class="p">)</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"word #</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span><span class="p">)</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -599,7 +663,7 @@ word #9/3000000 is said
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">vec_queen</span> <span class="o">=</span> <span class="n">wv</span><span class="p">[</span><span class="s1">&#39;queen&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vec_queen</span> <span class="o">=</span> <span class="n">wv</span><span class="p">[</span><span class="s1">'queen'</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -609,7 +673,8 @@ word #9/3000000 is said
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>One limitation of Word2Vec is that the model is unable to infer vectors for unseen words.</p>
 <p>Note: FastText model can solve this limitation.</p>
@@ -624,10 +689,10 @@ word #9/3000000 is said
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">vec_random</span> <span class="o">=</span> <span class="n">wv</span><span class="p">[</span><span class="s1">&#39;vietname&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">vec_random</span> <span class="o">=</span> <span class="n">wv</span><span class="p">[</span><span class="s1">'vietname'</span><span class="p">]</span>
 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The word &#39;vietname&#39; does not appear in this model&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"The word 'vietname' does not appear in this model"</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -640,7 +705,7 @@ word #9/3000000 is said
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>The word &#39;vietname&#39; does not appear in this model
+<pre>The word 'vietname' does not appear in this model
 </pre>
 </div>
 </div>
@@ -658,14 +723,14 @@ word #9/3000000 is said
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span>
-         <span class="p">(</span><span class="s1">&#39;scooter&#39;</span><span class="p">,</span> <span class="s1">&#39;chair&#39;</span><span class="p">),</span>
-         <span class="p">(</span><span class="s1">&#39;scooter&#39;</span><span class="p">,</span> <span class="s1">&#39;motorbike&#39;</span><span class="p">),</span>
-         <span class="p">(</span><span class="s1">&#39;scooter&#39;</span><span class="p">,</span> <span class="s1">&#39;football&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span>
+         <span class="p">(</span><span class="s1">'scooter'</span><span class="p">,</span> <span class="s1">'chair'</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">'scooter'</span><span class="p">,</span> <span class="s1">'motorbike'</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">'scooter'</span><span class="p">,</span> <span class="s1">'football'</span><span class="p">)</span>
 <span class="p">]</span>
 
 <span class="k">for</span> <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">w1</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">w2</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">wv</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">w1</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">w2</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">wv</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -698,7 +763,7 @@ scooter	football	0.07120829075574875
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vietnam&#39;</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s1">'vietnam'</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -711,7 +776,7 @@ scooter	football	0.07120829075574875
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[(&#39;ww2&#39;, 0.6164373159408569), (&#39;iraq&#39;, 0.6033741235733032), (&#39;reagan&#39;, 0.5772603154182434), (&#39;VietNam&#39;, 0.5732988119125366), (&#39;afghanistan&#39;, 0.5602078437805176)]
+<pre>[('ww2', 0.6164373159408569), ('iraq', 0.6033741235733032), ('reagan', 0.5772603154182434), ('VietNam', 0.5732988119125366), ('afghanistan', 0.5602078437805176)]
 </pre>
 </div>
 </div>
@@ -729,7 +794,7 @@ scooter	football	0.07120829075574875
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">([</span><span class="s1">&#39;you&#39;</span><span class="p">,</span> <span class="s2">&quot;don&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;know&quot;</span><span class="p">,</span> <span class="s2">&quot;me&quot;</span><span class="p">,</span> <span class="s2">&quot;son&quot;</span><span class="p">]))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">wv</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">([</span><span class="s1">'you'</span><span class="p">,</span> <span class="s2">"don't"</span><span class="p">,</span> <span class="s2">"know"</span><span class="p">,</span> <span class="s2">"me"</span><span class="p">,</span> <span class="s2">"son"</span><span class="p">]))</span>
 </pre></div>
 
     </div>
@@ -753,9 +818,13 @@ scooter	football	0.07120829075574875
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Visualize-the-Word-Embeddings-using-tSNE">Visualize the Word Embeddings using tSNE<a class="anchor-link" href="#Visualize-the-Word-Embeddings-using-tSNE"> </a></h1><p>Visualization can be used to notice semantic and syntactic trends in the data.</p>
+<h1 id="Visualize-the-Word-Embeddings-using-tSNE">
+<a class="anchor" href="#Visualize-the-Word-Embeddings-using-tSNE" aria-hidden="true"><span class="octicon octicon-link"></span></a>Visualize the Word Embeddings using tSNE<a class="anchor-link" href="#Visualize-the-Word-Embeddings-using-tSNE"> </a>
+</h1>
+<p>Visualization can be used to notice semantic and syntactic trends in the data.</p>
 <ul>
 <li>Semantic: words like cat, dog, cow have a tendency to lie close by.</li>
 <li>Syntactic: words like run, running or cut, cutting lie close together.</li>
@@ -771,7 +840,7 @@ scooter	football	0.07120829075574875
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">IncrementalPCA</span>    <span class="c1"># inital reduction</span>
 <span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>                   <span class="c1"># final reduction</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>                                  <span class="c1"># array handling</span>
@@ -799,14 +868,14 @@ scooter	football	0.07120829075574875
     <span class="kn">from</span> <span class="nn">plotly.offline</span> <span class="kn">import</span> <span class="n">init_notebook_mode</span><span class="p">,</span> <span class="n">iplot</span><span class="p">,</span> <span class="n">plot</span>
     <span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
 
-    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_vals</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_vals</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'text'</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">trace</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">plot_in_notebook</span><span class="p">:</span>
         <span class="n">init_notebook_mode</span><span class="p">(</span><span class="n">connected</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">iplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;word-embedding-plot&#39;</span><span class="p">)</span>
+        <span class="n">iplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'word-embedding-plot'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;word-embedding-plot.html&#39;</span><span class="p">)</span>
+        <span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'word-embedding-plot.html'</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">plot_with_matplotlib</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
@@ -843,9 +912,13 @@ scooter	football	0.07120829075574875
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Using-Pretrained-Word2Vec-in-Pytorch">Using Pretrained Word2Vec in Pytorch<a class="anchor-link" href="#Using-Pretrained-Word2Vec-in-Pytorch"> </a></h1><ol>
+<h1 id="Using-Pretrained-Word2Vec-in-Pytorch">
+<a class="anchor" href="#Using-Pretrained-Word2Vec-in-Pytorch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Pretrained Word2Vec in Pytorch<a class="anchor-link" href="#Using-Pretrained-Word2Vec-in-Pytorch"> </a>
+</h1>
+<ol>
 <li>Construct the vocabulary of our own data.</li>
 <li>Load word vectors corresponding to words in our vocabulary.</li>
 <li>Use the our word2index to translate our text to indices.</li>
@@ -858,7 +931,15 @@ scooter	football	0.07120829075574875
 
 
 
-  </div><a class="u-url" href="/minhdg-blog/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html" hidden></a>
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="minhdang241/minhdg-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/minhdg-blog/implementation/2021/07/26/NLP_6_Word_Embeddings_(Word2Vec)_-Part_1.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
