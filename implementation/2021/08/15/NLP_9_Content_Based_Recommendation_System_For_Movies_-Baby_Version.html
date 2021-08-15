@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Content based recommendation system for movies [Baby Version] | NLP365</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Content based recommendation system for movies [Baby Version]" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Develop a content-based recommendation system for movies." />
+<meta property="og:description" content="Develop a content-based recommendation system for movies." />
+<link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/15/NLP_9_Content_Based_Recommendation_System_For_Movies_-Baby_Version.html" />
+<meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/15/NLP_9_Content_Based_Recommendation_System_For_Movies_-Baby_Version.html" />
+<meta property="og:site_name" content="NLP365" />
+<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/recommendation_system.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-15T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Develop a content-based recommendation system for movies.","url":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/15/NLP_9_Content_Based_Recommendation_System_For_Movies_-Baby_Version.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/15/NLP_9_Content_Based_Recommendation_System_For_Movies_-Baby_Version.html"},"headline":"Content based recommendation system for movies [Baby Version]","dateModified":"2021-08-15T00:00:00-05:00","datePublished":"2021-08-15T00:00:00-05:00","image":"https://minhdang241.github.io/minhdg-blog/images/recommendation_system.jpg","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/minhdg-blog/">NLP365</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/minhdg-blog/about/">About Me</a><a class="page-link" href="/minhdg-blog/search/">Search</a><a class="page-link" href="/minhdg-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Content based recommendation system for movies [Baby Version]</h1><p class="page-description">Develop a content-based recommendation system for movies.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-08-15T00:00:00-05:00" itemprop="datePublished">
+        Aug 15, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#implementation">implementation</a>
+        
+      
+      </p>
+    
+
+    
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Overview-about-recommendation-system-and-its-application">Overview about recommendation system and its application </a></li>
+<li class="toc-entry toc-h1"><a href="#Main-types-of-recommendation-system">Main types of recommendation system </a></li>
+<li class="toc-entry toc-h1"><a href="#Load-dataset">Load dataset </a></li>
+<li class="toc-entry toc-h1"><a href="#Discussion">Discussion </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-08-15-NLP_9_Content_Based_Recommendation_System_For_Movies_[Baby_Version].ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">'/content/drive'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount("/content/drive", force_remount=True).
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Overview-about-recommendation-system-and-its-application">
+<a class="anchor" href="#Overview-about-recommendation-system-and-its-application" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview about recommendation system and its application<a class="anchor-link" href="#Overview-about-recommendation-system-and-its-application"> </a>
+</h1>
+<p>Recommendation system is popular nowadays. They are used to predict the "rating" or "preference" that users would give to an item. Those information can be used to provide users useful suggestions. For example, Amazon uses it to suggest products to customes, while Nexflix uses it to recommend videos based on user's favor.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Main-types-of-recommendation-system">
+<a class="anchor" href="#Main-types-of-recommendation-system" aria-hidden="true"><span class="octicon octicon-link"></span></a>Main types of recommendation system<a class="anchor-link" href="#Main-types-of-recommendation-system"> </a>
+</h1>
+<p>Generally, there are three types of recommendation system:</p>
+<ol>
+<li>
+<strong>Simple recommenders</strong>: provide recommendation based on items' popularity or ratings. For example, the movies in IDMB top 250.</li>
+<li>
+<strong>Content-based recommenders</strong>: suggest items based on other item properties. The system assumes that if a person likes a particular item, he or she will also like an item which is similar to it. For example, Netflix suggests new movies based on the user's history.</li>
+<li>
+<strong>Collaborative filtering engines</strong>: predict the rating or preference that a user would give an item based on past ratings and preferences of other users. </li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this post, we will build a content-based recommendation system for movies using the <code>MovieLens Dataset</code>. Since the dataset is large (26 miliion ratings and 750,000 tag applications), we only use a subset of it for fast development.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Load-dataset">
+<a class="anchor" href="#Load-dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load dataset<a class="anchor-link" href="#Load-dataset"> </a>
+</h1>
+<p>You can download the dataset <a href="https://www.kaggle.com/rounakbanik/the-movies-dataset/data">here</a>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/content/drive/MyDrive/Colab Notebooks/dataset/archive/movies_metadata.csv"</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>adult</th>
+      <th>belongs_to_collection</th>
+      <th>budget</th>
+      <th>genres</th>
+      <th>homepage</th>
+      <th>id</th>
+      <th>imdb_id</th>
+      <th>original_language</th>
+      <th>original_title</th>
+      <th>overview</th>
+      <th>popularity</th>
+      <th>poster_path</th>
+      <th>production_companies</th>
+      <th>production_countries</th>
+      <th>release_date</th>
+      <th>revenue</th>
+      <th>runtime</th>
+      <th>spoken_languages</th>
+      <th>status</th>
+      <th>tagline</th>
+      <th>title</th>
+      <th>video</th>
+      <th>vote_average</th>
+      <th>vote_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>False</td>
+      <td>{'id': 10194, 'name': 'Toy Story Collection', ...</td>
+      <td>30000000</td>
+      <td>[{'id': 16, 'name': 'Animation'}, {'id': 35, '...</td>
+      <td>http://toystory.disney.com/toy-story</td>
+      <td>862</td>
+      <td>tt0114709</td>
+      <td>en</td>
+      <td>Toy Story</td>
+      <td>Led by Woody, Andy's toys live happily in his ...</td>
+      <td>21.946943</td>
+      <td>/rhIRbceoE9lR4veEXuwCC2wARtG.jpg</td>
+      <td>[{'name': 'Pixar Animation Studios', 'id': 3}]</td>
+      <td>[{'iso_3166_1': 'US', 'name': 'United States o...</td>
+      <td>1995-10-30</td>
+      <td>373554033.0</td>
+      <td>81.0</td>
+      <td>[{'iso_639_1': 'en', 'name': 'English'}]</td>
+      <td>Released</td>
+      <td>NaN</td>
+      <td>Toy Story</td>
+      <td>False</td>
+      <td>7.7</td>
+      <td>5415.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>False</td>
+      <td>NaN</td>
+      <td>65000000</td>
+      <td>[{'id': 12, 'name': 'Adventure'}, {'id': 14, '...</td>
+      <td>NaN</td>
+      <td>8844</td>
+      <td>tt0113497</td>
+      <td>en</td>
+      <td>Jumanji</td>
+      <td>When siblings Judy and Peter discover an encha...</td>
+      <td>17.015539</td>
+      <td>/vzmL6fP7aPKNKPRTFnZmiUfciyV.jpg</td>
+      <td>[{'name': 'TriStar Pictures', 'id': 559}, {'na...</td>
+      <td>[{'iso_3166_1': 'US', 'name': 'United States o...</td>
+      <td>1995-12-15</td>
+      <td>262797249.0</td>
+      <td>104.0</td>
+      <td>[{'iso_639_1': 'en', 'name': 'English'}, {'iso...</td>
+      <td>Released</td>
+      <td>Roll the dice and unleash the excitement!</td>
+      <td>Jumanji</td>
+      <td>False</td>
+      <td>6.9</td>
+      <td>2413.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>False</td>
+      <td>{'id': 119050, 'name': 'Grumpy Old Men Collect...</td>
+      <td>0</td>
+      <td>[{'id': 10749, 'name': 'Romance'}, {'id': 35, ...</td>
+      <td>NaN</td>
+      <td>15602</td>
+      <td>tt0113228</td>
+      <td>en</td>
+      <td>Grumpier Old Men</td>
+      <td>A family wedding reignites the ancient feud be...</td>
+      <td>11.7129</td>
+      <td>/6ksm1sjKMFLbO7UY2i6G1ju9SML.jpg</td>
+      <td>[{'name': 'Warner Bros.', 'id': 6194}, {'name'...</td>
+      <td>[{'iso_3166_1': 'US', 'name': 'United States o...</td>
+      <td>1995-12-22</td>
+      <td>0.0</td>
+      <td>101.0</td>
+      <td>[{'iso_639_1': 'en', 'name': 'English'}]</td>
+      <td>Released</td>
+      <td>Still Yelling. Still Fighting. Still Ready for...</td>
+      <td>Grumpier Old Men</td>
+      <td>False</td>
+      <td>6.5</td>
+      <td>92.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Our recommendation system will be based on the similarity between the movie overviews. Specifically, we will compute the pairwise <code>cosine</code> similarity scores for all movies and suggest the movies based on this score.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First of all, we have to transform the raw text to vector form sincewe cannot compute the similarity score directly from the raw text. In this post, we will compute the <code>Term Frequency-Inverse Document Frequency (TF-IDF)</code> vectors for each document.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="c1"># Create a TF-IDF object and remove all english stop words in the document </span>
+<span class="c1"># before producing vector representation</span>
+<span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s1">'english'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">metadata</span><span class="p">[</span><span class="s1">'overview'</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">'overview'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+
+<span class="n">tfidf_matrix</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">'overview'</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfidf_matrix</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(45466, 75827)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>From the shape of the matrix we can see that the vector has length of 75827 and we have 45466 movie overview in total.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tfidf</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()[</span><span class="mi">5000</span><span class="p">:</span><span class="mi">5010</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>['avails',
+ 'avaks',
+ 'avalanche',
+ 'avalanches',
+ 'avallone',
+ 'avalon',
+ 'avant',
+ 'avanthika',
+ 'avanti',
+ 'avaracious']</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After generating vector for each movie overview, we can start computing the similarity score between them. There are many ways to do that besides <code>cosine similarity</code>, such as the <code>manhantatan</code>, <code>euclidean</code>, the <code>Pearson</code>, etc. There is no right or wrong answer to which score is the best. Different scores will work well in different situations. It is always encouraged to experiment with different metrics and choose the best.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">linear_kernel</span>
+
+<span class="n">cosine_sim</span> <span class="o">=</span> <span class="n">linear_kernel</span><span class="p">(</span><span class="n">tfidf_matrix</span><span class="p">,</span> <span class="n">tfidf_matrix</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cosine_sim</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(45466, 45466)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cosine_sim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0.01504121, 1.        , 0.04681953, ..., 0.        , 0.02198641,
+       0.00929411])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">metadata</span><span class="p">[</span><span class="s1">'title'</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_recommendations</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">cosine_sim</span><span class="o">=</span><span class="n">cosine_sim</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">title</span><span class="p">]</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">cosine_sim</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sim_scores</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="n">sim_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">11</span><span class="p">]</span>
+    <span class="n">movie_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sim_scores</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">movie_indices</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_recommendations</span><span class="p">(</span><span class="s1">'The Dark Knight Rises'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>45464             Satan Triumphant
+45463                     Betrayal
+45462          Century of Birthing
+45461                       Subdue
+45460                   Robin Hood
+45459              Caged Heat 3000
+45458          The Burkittsville 7
+45457    Shadow of the Blair Witch
+45456             House of Horrors
+45455    St. Michael Had a Rooster
+Name: title, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_recommendations</span><span class="p">(</span><span class="s1">'The Godfather'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1178               The Godfather: Part II
+44030    The Godfather Trilogy: 1972-1990
+1914              The Godfather: Part III
+23126                          Blood Ties
+11297                    Household Saints
+34717                   Start Liquidation
+10821                            Election
+38030            A Mother Should Be Loved
+17729                   Short Sharp Shock
+26293                  Beck 28 - Familjen
+Name: title, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Discussion">
+<a class="anchor" href="#Discussion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discussion<a class="anchor-link" href="#Discussion"> </a>
+</h1>
+<p>Here we will discuss a bit the motivation behind TF-IDF</p>
+<p><strong>Term frequency</strong>
+Give a set of English text documents, we want to rank them by which document is more relevant to the query, for example, "the excellent student". Firstly, we can simply filter out the documents that do not contain all 3 words - "the", "excellent" and "student". However, there are still many documents left. To further distinguish them, we might count the frequency of those 3 words in each document and rank them by corresponding frequencies. That frequency is called the <code>term frequency</code>. Since the length of the document may vary significantly, we often normalize the frequency of each word by the length of the document.</p>
+<p><strong>Inverse document frequency</strong>
+Some terms are more common than the other. For example, the term "the" is more popular than the word "excellent". Term frequency tends to incorrectly emphasize documents which happen to use the word "the" more frequently, without giving enough weight to more meaningful terms such as "excellent" and "student". Yet, the term "the" is not a good key word to distinguish the relevant and non-relevant documents. The <em>inverse document frequency</em> is used to diminished the weight of terms that occur very frequently in the document set and increases the weight of terms that occur rarely.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="minhdang241/minhdg-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/minhdg-blog/implementation/2021/08/15/NLP_9_Content_Based_Recommendation_System_For_Movies_-Baby_Version.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/minhdg-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/minhdg-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/minhdang241" title="minhdang241"><svg class="svg-icon grey"><use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/MinhDan18587327" title="MinhDan18587327"><svg class="svg-icon grey"><use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
