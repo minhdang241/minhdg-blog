@@ -13,11 +13,11 @@
 <link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/17/NLP_10_Aivivn_Product_Review_Sentiment_Analysis.html" />
 <meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/17/NLP_10_Aivivn_Product_Review_Sentiment_Analysis.html" />
 <meta property="og:site_name" content="NLP365" />
-<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/TextCNN.jpg" />
+<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/TextCNN.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-08-17T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"Training the sentiment classifier (TextCNN) for AIVIVN product review dataset using Pytorch Lightning.","url":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/17/NLP_10_Aivivn_Product_Review_Sentiment_Analysis.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/17/NLP_10_Aivivn_Product_Review_Sentiment_Analysis.html"},"headline":"AIVIVN Product Review Sentiment Analysis [Pytorch Lightning Sample]","dateModified":"2021-08-17T00:00:00-05:00","datePublished":"2021-08-17T00:00:00-05:00","image":"https://minhdang241.github.io/minhdg-blog/images/TextCNN.jpg","@context":"https://schema.org"}</script>
+{"description":"Training the sentiment classifier (TextCNN) for AIVIVN product review dataset using Pytorch Lightning.","url":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/17/NLP_10_Aivivn_Product_Review_Sentiment_Analysis.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/17/NLP_10_Aivivn_Product_Review_Sentiment_Analysis.html"},"headline":"AIVIVN Product Review Sentiment Analysis [Pytorch Lightning Sample]","dateModified":"2021-08-17T00:00:00-05:00","datePublished":"2021-08-17T00:00:00-05:00","image":"https://minhdang241.github.io/minhdg-blog/images/TextCNN.png","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -216,7 +216,6 @@ window.onload = wrap_img;
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span>
 <span class="kn">import</span> <span class="nn">torchmetrics</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 </pre></div>
 
     </div>
@@ -583,24 +582,6 @@ window.onload = wrap_img;
 <span class="k">def</span> <span class="nf">build_vocab</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="n">sentences</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">tokenizer</span><span class="o">.</span><span class="n">fit_on_texts</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">TqdmUpTo</span><span class="p">(</span><span class="n">tqdm</span><span class="p">):</span>
-    <span class="sd">"""From https://github.com/tqdm/tqdm/blob/master/examples/tqdm_wget.py"""</span>
-
-    <span class="k">def</span> <span class="nf">update_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bsize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tsize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        blocks: int, optional</span>
-<span class="sd">            Number of blocks transferred so far [default: 1].</span>
-<span class="sd">        bsize: int, optional</span>
-<span class="sd">            Size of each block (in tqdm units) [default: 1].</span>
-<span class="sd">        tsize: int, optional</span>
-<span class="sd">            Total size (in tqdm units). If [default: None] remains unchanged.</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="n">tsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">tsize</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">blocks</span> <span class="o">*</span> <span class="n">bsize</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># will also set self.n = b * bsize</span>
 </pre></div>
 
     </div>
