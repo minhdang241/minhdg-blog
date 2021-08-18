@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Extract aspects from sentence using denpendency parsing and POS tags | NLP365</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Extract aspects from sentence using denpendency parsing and POS tags" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Extract aspects in the sentences for aspect sentiment analysis uisng dependency parsing and pos tags." />
+<meta property="og:description" content="Extract aspects in the sentences for aspect sentiment analysis uisng dependency parsing and pos tags." />
+<link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/18/NLP_11_Extract_aspects_from_sentence_using_denpendency_parsing_and_POS_tags.html" />
+<meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/18/NLP_11_Extract_aspects_from_sentence_using_denpendency_parsing_and_POS_tags.html" />
+<meta property="og:site_name" content="NLP365" />
+<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/DP.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-18T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Extract aspects in the sentences for aspect sentiment analysis uisng dependency parsing and pos tags.","url":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/18/NLP_11_Extract_aspects_from_sentence_using_denpendency_parsing_and_POS_tags.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/18/NLP_11_Extract_aspects_from_sentence_using_denpendency_parsing_and_POS_tags.html"},"headline":"Extract aspects from sentence using denpendency parsing and POS tags","dateModified":"2021-08-18T00:00:00-05:00","datePublished":"2021-08-18T00:00:00-05:00","image":"https://minhdang241.github.io/minhdg-blog/images/DP.jpg","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/minhdg-blog/">NLP365</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/minhdg-blog/about/">About Me</a><a class="page-link" href="/minhdg-blog/search/">Search</a><a class="page-link" href="/minhdg-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Extract aspects from sentence using denpendency parsing and POS tags</h1><p class="page-description">Extract aspects in the sentences for aspect sentiment analysis uisng dependency parsing and pos tags.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-08-18T00:00:00-05:00" itemprop="datePublished">
+        Aug 18, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      7 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#implementation">implementation</a>
+        
+      
+      </p>
+    
+
+    
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Install-required-modules">Install required modules </a></li>
+<li class="toc-entry toc-h1"><a href="#Load-dataset">Load dataset </a></li>
+<li class="toc-entry toc-h1"><a href="#Extract-Aspects-using-NER-and-POS">Extract Aspects using NER and POS </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Rules">Rules </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Discussion">Discussion </a></li>
+<li class="toc-entry toc-h1"><a href="#Tags">Tags </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-08-18-NLP_11_Extract_aspects_from_sentence_using_denpendency_parsing_and_POS_tags.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">'/content/drive'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Mounted at /content/drive
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Install-required-modules">
+<a class="anchor" href="#Install-required-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install required modules<a class="anchor-link" href="#Install-required-modules"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyvi</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">trungtv</span><span class="o">/</span><span class="n">vi_spacy</span><span class="o">/</span><span class="n">raw</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">vi_spacy_model</span><span class="o">-</span><span class="mf">0.2</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">vi_spacy_model</span><span class="o">-</span><span class="mf">0.2</span><span class="o">.</span><span class="mf">1.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">spacy</span><span class="o">==</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">4</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong> In this post, we will use spacy version 2 since in version it changes the way to load model, and I don't know how to make it work for the <code>vi_spacy_model</code> :).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">spacy</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">punctuation</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"display.max_colwidth"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Load-dataset">
+<a class="anchor" href="#Load-dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load dataset<a class="anchor-link" href="#Load-dataset"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/content/drive/MyDrive/SLSOPS/dataset/vietnamese/spacy.csv"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>db_id</th>
+      <th>raw</th>
+      <th>tokenized_spacy</th>
+      <th>spacy_no_sw</th>
+      <th>star_rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Shipper giao đúng hẹn, tận tình mang vào đến cửa căn hộ chung cư.</td>
+      <td>shipper giao đúng hẹn tận_tình mang vào đến cửa căn_hộ chung_cư</td>
+      <td>shipper giao hẹn tận_tình cửa căn_hộ chung_cư</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>Nhân viên lắp đặt thân thiện, làm việc tốt, tuy nhiên hơi làm dơ tường và đồ đạc trong nhà.</td>
+      <td>nhân_viên lắp_đặt thân_thiện làm_việc tốt tuy_nhiên hơi làm dơ tường và đồ_đạc trong nhà</td>
+      <td>nhân_viên lắp_đặt thân_thiện làm_việc tốt hơi dơ tường đồ_đạc</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>Sản phẩm đẹp, giá cạnh tranh.</td>
+      <td>sản_phẩm đẹp giá cạnh_tranh</td>
+      <td>sản_phẩm đẹp giá cạnh_tranh</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>Nhưng giá Tiki bán là ko tặng vật tư giống ở ngoài bán.</td>
+      <td>nhưng giá tiki bán là không tặng_vật_tư giống ở ngoài bán</td>
+      <td>giá tiki tặng_vật_tư</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>Lúc máy mình lắp xong thì giá vật tư là khoảng hơn 1 triệu.</td>
+      <td>lúc máy mình lắp xong thì giá vật_tư là khoảng hơn 1 triệu</td>
+      <td>máy lắp xong giá vật_tư 1 triệu</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Extract-Aspects-using-NER-and-POS">
+<a class="anchor" href="#Extract-Aspects-using-NER-and-POS" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extract Aspects using NER and POS<a class="anchor-link" href="#Extract-Aspects-using-NER-and-POS"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AsOp</span><span class="p">:</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">opinion</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">adv</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span> 
+    <span class="n">verb</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">negative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">aspect_compound</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Aspect_Opinion</span><span class="p">:</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">opinion</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">verb</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">negative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'vi_spacy_model'</span><span class="p">)</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s1">'Cộng đồng xử lý ngôn ngữ tự nhiên'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">tag_</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Cộng_đồng N nsubj
+xử_lý V ROOT
+ngôn_ngữ N obj
+tự_nhiên A compound
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'spacy_no_sw'</span><span class="p">])</span>
+<span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'shipper giao hẹn tận_tình cửa căn_hộ chung_cư'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">spacy</span> <span class="kn">import</span> <span class="n">displacy</span> <span class="c1"># module for visualize the denpendency parsing</span>
+<span class="n">displacy</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nlp</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'tokenized_spacy'</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span> <span class="n">style</span><span class="o">=</span><span class="s2">"dep"</span><span class="p">,</span> <span class="n">jupyter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="vi" id="8b1745ebcf974b558d33061789e51dac-0" class="displacy" width="750" height="399.5" direction="ltr" style="max-width: none; height: 399.5px; color: #000000; background: #ffffff; font-family: Arial; direction: ltr">
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="309.5">
+    <tspan class="displacy-word" fill="currentColor" x="50">sản_phẩm</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="50">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="309.5">
+    <tspan class="displacy-word" fill="currentColor" x="225">đẹp</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="225">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="309.5">
+    <tspan class="displacy-word" fill="currentColor" x="400">giá</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="400">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="309.5">
+    <tspan class="displacy-word" fill="currentColor" x="575">cạnh_tranh</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="575">X</tspan>
+</text>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-8b1745ebcf974b558d33061789e51dac-0-0" stroke-width="2px" d="M70,264.5 C70,177.0 215.0,177.0 215.0,264.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-8b1745ebcf974b558d33061789e51dac-0-0" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">amod</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M215.0,266.5 L223.0,254.5 207.0,254.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-8b1745ebcf974b558d33061789e51dac-0-1" stroke-width="2px" d="M70,264.5 C70,89.5 395.0,89.5 395.0,264.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-8b1745ebcf974b558d33061789e51dac-0-1" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">compound</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M395.0,266.5 L403.0,254.5 387.0,254.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-8b1745ebcf974b558d33061789e51dac-0-2" stroke-width="2px" d="M70,264.5 C70,2.0 575.0,2.0 575.0,264.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-8b1745ebcf974b558d33061789e51dac-0-2" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">xcomp</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M575.0,266.5 L583.0,254.5 567.0,254.5" fill="currentColor"></path>
+</g>
+</svg>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">displacy</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nlp</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="mi">20</span><span class="p">]),</span> <span class="n">style</span><span class="o">=</span><span class="s2">"dep"</span><span class="p">,</span> <span class="n">jupyter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="vi" id="73398a62cf9346a59f15c322fb9f9806-0" class="displacy" width="2850" height="574.5" direction="ltr" style="max-width: none; height: 574.5px; color: #000000; background: #ffffff; font-family: Arial; direction: ltr">
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="50">tiền</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="50">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="225">nào</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="225">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="400">của</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="400">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="575">nấy</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="575">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="750">nhưng</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="750">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="925">âm_thanh</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="925">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="1100">ồn_ào</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="1100">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="1275">như</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="1275">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="1450">động_cơ</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="1450">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="1625">bezen</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="1625">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="1800">ầm_ầm</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="1800">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="1975">thế</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="1975">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="2150">này</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="2150">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="2325">thì</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="2325">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="2500">chịu</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="2500">X</tspan>
+</text>
+
+<text class="displacy-token" fill="currentColor" text-anchor="middle" y="484.5">
+    <tspan class="displacy-word" fill="currentColor" x="2675">rồi</tspan>
+    <tspan class="displacy-tag" dy="2em" fill="currentColor" x="2675">X</tspan>
+</text>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-0" stroke-width="2px" d="M70,439.5 C70,89.5 920.0,89.5 920.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-0" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">nsubj</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M70,441.5 L62,429.5 78,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-1" stroke-width="2px" d="M70,439.5 C70,352.0 205.0,352.0 205.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-1" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">det</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M205.0,441.5 L213.0,429.5 197.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-2" stroke-width="2px" d="M420,439.5 C420,352.0 555.0,352.0 555.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-2" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">case</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M420,441.5 L412,429.5 428,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-3" stroke-width="2px" d="M70,439.5 C70,177.0 565.0,177.0 565.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-3" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">nmod</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M565.0,441.5 L573.0,429.5 557.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-4" stroke-width="2px" d="M770,439.5 C770,352.0 905.0,352.0 905.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-4" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">cc</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M770,441.5 L762,429.5 778,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-5" stroke-width="2px" d="M945,439.5 C945,352.0 1080.0,352.0 1080.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-5" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">amod</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M1080.0,441.5 L1088.0,429.5 1072.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-6" stroke-width="2px" d="M1295,439.5 C1295,352.0 1430.0,352.0 1430.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-6" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">cc</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M1295,441.5 L1287,429.5 1303,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-7" stroke-width="2px" d="M1470,439.5 C1470,264.5 1785.0,264.5 1785.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-7" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">nsubj</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M1470,441.5 L1462,429.5 1478,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-8" stroke-width="2px" d="M1470,439.5 C1470,352.0 1605.0,352.0 1605.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-8" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">compound</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M1605.0,441.5 L1613.0,429.5 1597.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-9" stroke-width="2px" d="M945,439.5 C945,89.5 1795.0,89.5 1795.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-9" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">ccomp</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M1795.0,441.5 L1803.0,429.5 1787.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-10" stroke-width="2px" d="M1820,439.5 C1820,352.0 1955.0,352.0 1955.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-10" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">obj</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M1955.0,441.5 L1963.0,429.5 1947.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-11" stroke-width="2px" d="M1995,439.5 C1995,352.0 2130.0,352.0 2130.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-11" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">det</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M2130.0,441.5 L2138.0,429.5 2122.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-12" stroke-width="2px" d="M2345,439.5 C2345,352.0 2480.0,352.0 2480.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-12" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">cc</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M2345,441.5 L2337,429.5 2353,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-13" stroke-width="2px" d="M945,439.5 C945,2.0 2500.0,2.0 2500.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-13" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">conj</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M2500.0,441.5 L2508.0,429.5 2492.0,429.5" fill="currentColor"></path>
+</g>
+
+<g class="displacy-arrow">
+    <path class="displacy-arc" id="arrow-73398a62cf9346a59f15c322fb9f9806-0-14" stroke-width="2px" d="M2520,439.5 C2520,352.0 2655.0,352.0 2655.0,439.5" fill="none" stroke="currentColor"></path>
+    <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+        <textpath xlink:href="#arrow-73398a62cf9346a59f15c322fb9f9806-0-14" class="displacy-label" startoffset="50%" side="left" fill="currentColor" text-anchor="middle">advmod</textpath>
+    </text>
+    <path class="displacy-arrowhead" d="M2655.0,441.5 L2663.0,429.5 2647.0,429.5" fill="currentColor"></path>
+</g>
+</svg>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Rules">
+<a class="anchor" href="#Rules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rules<a class="anchor-link" href="#Rules"> </a>
+</h2>
+<p>We check 2 cases:</p>
+<ol>
+<li>The token POS is <code>N</code> (Noun) and the Dependency tag is not <code>nsubj</code>.</li>
+<li>The token POS is <code>N</code> (Noun) and the Dependency tag is <code>nsubj</code>.</li>
+</ol>
+<p><strong>Note:</strong> I come up with these rules by trying with many samples =)) No magic behind it.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">aspects</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="mi">25</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+    <span class="c1"># Case 1: </span>
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"N"</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">!=</span> <span class="s2">"nsubj"</span><span class="p">:</span>
+        <span class="n">aspect</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"compound"</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span>
+                    <span class="n">aspect</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">aspect</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">elif</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                    <span class="n">aspect</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">aspect</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"amod"</span><span class="p">:</span>
+                <span class="n">opinion</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                <span class="k">for</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">gchild</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"advmod"</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span>
+                            <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="k">elif</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                            <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">opinion</span><span class="p">)</span>
+                <span class="n">aspects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asp_obj</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"conj"</span><span class="p">:</span>
+                <span class="n">asp_obj</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"N"</span><span class="p">:</span>
+                    <span class="n">aspect</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                    <span class="n">opinion</span> <span class="o">=</span> <span class="s2">""</span>
+                    <span class="k">for</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">gchild</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"xcomp"</span> <span class="ow">and</span> <span class="n">gchild</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span><span class="p">:</span>
+                            <span class="n">opinion</span> <span class="o">=</span> <span class="n">gchild</span><span class="o">.</span><span class="n">text</span>
+                    <span class="k">if</span> <span class="n">opinion</span><span class="p">:</span>
+                        <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">opinion</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span><span class="p">:</span>
+                    <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">asp_obj</span><span class="p">:</span> 
+                    <span class="n">aspects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asp_obj</span><span class="p">)</span>
+            
+    <span class="c1"># Case 2:</span>
+    <span class="k">elif</span> <span class="n">token</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"N"</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"nsubj"</span><span class="p">:</span>
+        <span class="n">opinion</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span><span class="p">:</span>
+            <span class="n">opinion</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">text</span>
+            
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"R"</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">opinion</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span> 
+                        <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">opinion</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                    <span class="k">for</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">gchild</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"advmod"</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span>
+                                <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2">"</span>
+                            <span class="k">elif</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                                <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">opinion</span><span class="p">)</span>
+                <span class="n">aspects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asp_obj</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">aspects</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>đến chán giờ cứ sử_dụng là bị cúp nguồn điện thì ai dám bật
+[]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AsOp</span><span class="p">:</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">opinion</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pyvi</span> <span class="kn">import</span> <span class="n">ViTokenizer</span><span class="p">,</span> <span class="n">ViPosTagger</span>
+<span class="n">sentence</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'tokenized_spacy'</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span>
+<span class="c1"># print(sentence)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'tokenized_spacy'</span><span class="p">])[:</span><span class="mi">100</span><span class="p">]</span>
+<span class="n">aspects</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"N"</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">!=</span> <span class="s2">"nsubj"</span><span class="p">:</span>
+                <span class="n">aspect</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span>
+                <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"compound"</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span>
+                            <span class="n">aspect</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">aspect</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="k">elif</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                            <span class="n">aspect</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">aspect</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"amod"</span><span class="p">:</span>
+                        <span class="n">opinion</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                        <span class="k">for</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">gchild</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"advmod"</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span>
+                                    <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2">"</span>
+                                <span class="k">elif</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                                    <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">opinion</span><span class="p">)</span>
+                        <span class="n">aspects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asp_obj</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"conj"</span><span class="p">:</span>
+                        <span class="n">asp_obj</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"N"</span><span class="p">:</span>
+                            <span class="n">aspect</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                            <span class="n">opinion</span> <span class="o">=</span> <span class="s2">""</span>
+                            <span class="k">for</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">gchild</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"xcomp"</span> <span class="ow">and</span> <span class="n">gchild</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span><span class="p">:</span>
+                                    <span class="n">opinion</span> <span class="o">=</span> <span class="n">gchild</span><span class="o">.</span><span class="n">text</span>
+                            <span class="k">if</span> <span class="n">opinion</span><span class="p">:</span>
+                                <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">opinion</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span><span class="p">:</span>
+                            <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">asp_obj</span><span class="p">:</span> 
+                            <span class="n">aspects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asp_obj</span><span class="p">)</span>
+                    
+            <span class="k">elif</span> <span class="n">token</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"N"</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"nsubj"</span><span class="p">:</span>
+                <span class="n">opinion</span> <span class="o">=</span> <span class="s2">""</span>
+                <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span><span class="p">:</span>
+                    <span class="n">opinion</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">text</span>
+                    
+                <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"A"</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_</span> <span class="o">==</span> <span class="s2">"R"</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">opinion</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span> 
+                                <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2">"</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">opinion</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                            <span class="k">for</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">gchild</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">"advmod"</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">lefts</span><span class="p">:</span>
+                                        <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2">"</span>
+                                    <span class="k">elif</span> <span class="n">gchild</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">rights</span><span class="p">:</span>
+                                        <span class="n">opinion</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">opinion</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gchild</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="n">asp_obj</span> <span class="o">=</span> <span class="n">AsOp</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">opinion</span><span class="o">=</span><span class="n">opinion</span><span class="p">)</span>
+                        <span class="n">aspects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asp_obj</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">aspects</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[AsOp(aspect='shipper', opinion='vào'),
+ AsOp(aspect='nhân_viên', opinion='tốt'),
+ AsOp(aspect='sản_phẩm', opinion='đẹp'),
+ AsOp(aspect='giá', opinion='không tặng_vật_tư'),
+ AsOp(aspect='giá', opinion='không tặng_vật_tư giống'),
+ AsOp(aspect='giá', opinion='khoảng'),
+ AsOp(aspect='giá', opinion='hơn khoảng'),
+ AsOp(aspect='giá', opinion='hơn'),
+ AsOp(aspect='tiền', opinion='hơn'),
+ AsOp(aspect='tiền', opinion='không hơn'),
+ AsOp(aspect='hàng', opinion='đúng'),
+ AsOp(aspect='tiki giao_nhận', opinion='tốt'),
+ AsOp(aspect='máy', opinion='tốt'),
+ AsOp(aspect='máy', opinion='rất êm'),
+ AsOp(aspect='hàng', opinion='nhanh'),
+ AsOp(aspect='hàng', opinion='nhanh ổn'),
+ AsOp(aspect='sản_phẩm', opinion='tạm'),
+ AsOp(aspect='hàng', opinion='nhanh'),
+ AsOp(aspect='máy_lạnh', opinion='chưa'),
+ AsOp(aspect='máy_lạnh', opinion='chưa được'),
+ AsOp(aspect='máy', opinion='chỉ'),
+ AsOp(aspect='tiền', opinion='ồn_ào'),
+ AsOp(aspect='âm_thanh', opinion='ồn_ào'),
+ AsOp(aspect='hàng', opinion='mới'),
+ AsOp(aspect='hàng', opinion='cũ'),
+ AsOp(aspect='điện', opinion='cực_kỳ tốt'),
+ AsOp(aspect='điện', opinion='cực_kỳ tốt liên_tục'),
+ AsOp(aspect='sản_phẩm', opinion='cùng'),
+ AsOp(aspect='thực_tế', opinion='gần'),
+ AsOp(aspect='tiếng', opinion='to'),
+ AsOp(aspect='tiếng', opinion='không êm'),
+ AsOp(aspect='pin', opinion='không'),
+ AsOp(aspect='đội_ngũ', opinion='rất'),
+ AsOp(aspect='giá', opinion='thêm'),
+ AsOp(aspect='người', opinion='xanh'),
+ AsOp(aspect='tiki', opinion='rẻ'),
+ AsOp(aspect='máy', opinion='đúng đúng'),
+ AsOp(aspect='máy', opinion='khá to'),
+ AsOp(aspect='máy', opinion='khá to êm'),
+ AsOp(aspect='máy', opinion='khá to êm lại'),
+ AsOp(aspect='khi', opinion='sẽ êm'),
+ AsOp(aspect='máy', opinion='quá ồn'),
+ AsOp(aspect='bạn', opinion='dễ_thương'),
+ AsOp(aspect='bạn', opinion='dễ_thương lắm'),
+ AsOp(aspect='hàng', opinion='nhanh'),
+ AsOp(aspect='độ', opinion='nhiều'),
+ AsOp(aspect='độ', opinion='bền'),
+ AsOp(aspect='ngày', opinion='hợp_lý'),
+ AsOp(aspect='đội', opinion='nhiều'),
+ AsOp(aspect='điều', opinion='hòa'),
+ AsOp(aspect='sản_phẩm', opinion='không'),
+ AsOp(aspect='sản_phẩm', opinion='mới không'),
+ AsOp(aspect='sản_phẩm', opinion='mới không ra'),
+ AsOp(aspect='sản_phẩm', opinion='mới không ra rồi'),
+ AsOp(aspect='điểm', opinion='vô_cùng'),
+ AsOp(aspect='điều', opinion='hòa'),
+ AsOp(aspect='điều', opinion='hòa'),
+ AsOp(aspect='điều', opinion='cũ'),
+ AsOp(aspect='phí', opinion='không'),
+ AsOp(aspect='lần', opinion='cuối_cùng'),
+ AsOp(aspect='chiều', opinion='dài'),
+ AsOp(aspect='cái màng', opinion='lọc'),
+ AsOp(aspect='biên_độ', opinion='nóng'),
+ AsOp(aspect='biên_độ', opinion='lạnh'),
+ AsOp(aspect='biên_độ', opinion='cao'),
+ AsOp(aspect='tổng_chi_phí', opinion='hết'),
+ AsOp(aspect='bao', opinion='gôm'),
+ AsOp(aspect='lòng', opinion='thật buồn'),
+ AsOp(aspect='giá', opinion='rẻ'),
+ AsOp(aspect='giá', opinion='rât'),
+ AsOp(aspect='giá', opinion='hợp_lý'),
+ AsOp(aspect='7tr', opinion='tròn'),
+ AsOp(aspect='cục', opinion='không'),
+ AsOp(aspect='cục', opinion='không có'),
+ AsOp(aspect='máy', opinion='hơi lạnh'),
+ AsOp(aspect='cảm_giác', opinion='rất dễ_chịu'),
+ AsOp(aspect='cục', opinion='lạnh'),
+ AsOp(aspect='cục', opinion='nóng khoảng'),
+ AsOp(aspect='cánh_quạt', opinion='không'),
+ AsOp(aspect='cánh_quạt', opinion='không được'),
+ AsOp(aspect='cục', opinion='nóng'),
+ AsOp(aspect='máy_lạnh', opinion='rất tận_tình'),
+ AsOp(aspect='máy_lạnh', opinion='rất tận_tình kém'),
+ AsOp(aspect='nhân_viên', opinion='rất tận_tình'),
+ AsOp(aspect='nhân_viên', opinion='rất tận_tình kém'),
+ AsOp(aspect='dịch_vụ', opinion='rất kém'),
+ AsOp(aspect='máy_lạnh', opinion='tạm ổn'),
+ AsOp(aspect='máy_lạnh', opinion='tạm ổn êm'),
+ AsOp(aspect='cục', opinion='nóng rất'),
+ AsOp(aspect='dịch_vụ', opinion='khá ổn'),
+ AsOp(aspect='máy', opinion='lạnh'),
+ AsOp(aspect='mát', opinion='lạnh'),
+ AsOp(aspect='sản_phẩm', opinion='mới'),
+ AsOp(aspect='hàng', opinion='nhanh'),
+ AsOp(aspect='máy', opinion='êm'),
+ AsOp(aspect='máy', opinion='êm ít'),
+ AsOp(aspect='máy', opinion='đẹp'),
+ AsOp(aspect='máy', opinion='tốt'),
+ AsOp(aspect='cục', opinion='dễ'),
+ AsOp(aspect='thiết_kế', opinion='trang_nhã'),
+ AsOp(aspect='cục', opinion='mạnh_mẽ'),
+ AsOp(aspect='cục', opinion='cứng_cáp'),
+ AsOp(aspect='tính_năng', opinion='nhiều'),
+ AsOp(aspect='máy', opinion='không'),
+ AsOp(aspect='tốc_độ gió', opinion='phù_hợp'),
+ AsOp(aspect='kích_thước', opinion='khác'),
+ AsOp(aspect='chức_năng', opinion='đầy_đủ')]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Discussion">
+<a class="anchor" href="#Discussion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discussion<a class="anchor-link" href="#Discussion"> </a>
+</h1>
+<p>The quality of this approach depends on the accuracy of the dependecy parsing and POS model.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Tags">
+<a class="anchor" href="#Tags" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tags<a class="anchor-link" href="#Tags"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>A - Adjective
+C - Coordinating conjunction
+E - Preposition
+I - Interjection
+L - Determiner
+M - Numeral
+N - Common noun
+Nc - Noun Classifier
+Ny - Noun abbreviation
+Np - Proper noun
+Nu - Unit noun
+P - Pronoun
+R - Adverb
+S - Subordinating conjunction
+T - Auxiliary, modal words
+V - Verb
+X - Unknown
+F - Filtered out (punctuation)</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>ccomp</strong>: functions like an object of the verb, or adjective.</p>
+<p><strong>xcomp</strong>: if the subject of the clausal complement is controlled (that is, must be the same as the higher subject or object, with no other possible interpretation)</p>
+<p><strong>predicative</strong>: a part of a sentence containing a verb that makes a statement about the subject of the verb, such as went home in John went home.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="minhdang241/minhdg-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/minhdg-blog/implementation/2021/08/18/NLP_11_Extract_aspects_from_sentence_using_denpendency_parsing_and_POS_tags.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/minhdg-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/minhdg-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/minhdang241" title="minhdang241"><svg class="svg-icon grey"><use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/MinhDan18587327" title="MinhDan18587327"><svg class="svg-icon grey"><use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
