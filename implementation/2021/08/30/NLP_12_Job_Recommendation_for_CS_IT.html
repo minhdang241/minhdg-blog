@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Job recommendation system for CS/IT program. | NLP365</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Job recommendation system for CS/IT program." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Implement job recommendation system for CS/IT program" />
+<meta property="og:description" content="Implement job recommendation system for CS/IT program" />
+<link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/30/NLP_12_Job_Recommendation_for_CS_IT.html" />
+<meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/implementation/2021/08/30/NLP_12_Job_Recommendation_for_CS_IT.html" />
+<meta property="og:site_name" content="NLP365" />
+<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/cs_it_recommender.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Implement job recommendation system for CS/IT program","url":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/30/NLP_12_Job_Recommendation_for_CS_IT.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/implementation/2021/08/30/NLP_12_Job_Recommendation_for_CS_IT.html"},"headline":"Job recommendation system for CS/IT program.","dateModified":"2021-08-30T00:00:00-05:00","datePublished":"2021-08-30T00:00:00-05:00","image":"https://minhdang241.github.io/minhdg-blog/images/cs_it_recommender.jpg","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/minhdg-blog/">NLP365</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/minhdg-blog/about/">About Me</a><a class="page-link" href="/minhdg-blog/search/">Search</a><a class="page-link" href="/minhdg-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Job recommendation system for CS/IT program.</h1><p class="page-description">Implement job recommendation system for CS/IT program</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-08-30T00:00:00-05:00" itemprop="datePublished">
+        Aug 30, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      14 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#implementation">implementation</a>
+        
+      
+      </p>
+    
+
+    
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Overview:">Overview: </a></li>
+<li class="toc-entry toc-h1"><a href="#Setup">Setup </a></li>
+<li class="toc-entry toc-h1"><a href="#Load-dataset">Load dataset </a></li>
+<li class="toc-entry toc-h1"><a href="#Preprocess-data">Preprocess data </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Step-1:-Remove-HTML-tags">Step 1: Remove HTML tags </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-2:-Add-space">Step 2: Add space </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#2.1-Normalize-space-rules">2.1 Normalize space rules </a></li>
+<li class="toc-entry toc-h3"><a href="#2.2-Add-space-and-remove-listing-number">2.2 Add space and remove listing number </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Step-3:-Expand-contractions">Step 3: Expand contractions </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-4:-Remove-redundant-elements">Step 4: Remove redundant elements </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-5:-Remove-emojies">Step 5: Remove emojies </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-6:-Removing-accented-characters">Step 6: Removing accented characters </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-7:-Collapse-duplicated-punctuation">Step 7: Collapse duplicated punctuation </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-8:-Remove-consecutive-spaces">Step 8: Remove consecutive spaces </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-9:-Lower-case">Step 9: Lower case </a></li>
+<li class="toc-entry toc-h2"><a href="#Step-9:-Remove-stopwords">Step 9: Remove stopwords </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Load-preprocessed-datasets-(If-it-is-availabel)">Load preprocessed datasets (If it is availabel) </a></li>
+<li class="toc-entry toc-h1"><a href="#Implement-the-Recommender">Implement the Recommender </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Load-the-NER-model">Load the NER model </a></li>
+<li class="toc-entry toc-h2"><a href="#Load-the-sentence-transformer">Load the sentence transformer </a></li>
+<li class="toc-entry toc-h2"><a href="#Define-helpers-functions">Define helpers functions </a></li>
+<li class="toc-entry toc-h2"><a href="#Define-Recommender-class">Define Recommender class </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Inference">Inference </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-08-30-NLP_12_Job_Recommendation_for_CS_IT.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Overview:">
+<a class="anchor" href="#Overview:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview:<a class="anchor-link" href="#Overview:"> </a>
+</h1>
+<p>Taxonomy of recommender systems: A framework to classify and analyze a particular recommendation system.The system is described by the following dimensions:</p>
+
+<pre><code>1. domain
+2. purpose
+3. context
+4. personalize level
+5. whose opinions
+6. privacy and trustworthiness
+7. interfaces
+8. algorithms</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Domain</strong>: Type of content recommended. The domain of Netflix is movies and TV series.</p>
+<p><strong>Purpose</strong>: What is the purpose of the system, both for the end user and for the provider?</p>
+<p><strong>Context</strong>: The environment which the consumer recieves a recommendation.</p>
+<p><strong>Personalization Levels</strong>:</p>
+<ol>
+<li>None personalized</li>
+<li>Semi/Segment personalized</li>
+<li>Personalized recommendation is based on data about the current user than indicates how the user has interacted with the system previously.</li>
+</ol>
+<p><strong>Algorithms</strong>:
+Content-based filtering uses the metadata having on the items in the catalog. Depending on the specific algorithm, the system can calculate recommendations either by taking the items the user has liked and finding similar content, by comparing the items and user profiles, or if there's no user involved, by finding similar content between items.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Setup">
+<a class="anchor" href="#Setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup<a class="anchor-link" href="#Setup"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">'/content/drive'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Mounted at /content/drive
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_columns'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># or 1000</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_rows'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># or 1000</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_colwidth'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># or 199</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">transformers</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">beautifulsoup4</span>
+<span class="err">!</span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">spacy</span> <span class="n">download</span> <span class="n">en_core_web_md</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">sentence</span><span class="o">-</span><span class="n">transformers</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">Unidecode</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">symspellpy</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">contractions</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Load-dataset">
+<a class="anchor" href="#Load-dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load dataset<a class="anchor-link" href="#Load-dataset"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">course_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/content/drive/MyDrive/Colab Notebooks/Text Classification/datasets/job_recommendation/dataset.csv"</span><span class="p">)</span>
+<span class="n">job_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/content/drive/MyDrive/Colab Notebooks/Text Classification/datasets/job_recommendation/job_dataset.csv"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Preprocess-data">
+<a class="anchor" href="#Preprocess-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preprocess data<a class="anchor-link" href="#Preprocess-data"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># df = job_df</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">course_df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># df = course_df</span>
+<span class="c1"># df.drop([67], inplace=True)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># df['long_description'] =df['description'] </span>
+<span class="c1"># df['description'] = df['short_description']</span>
+<span class="c1"># df = df.dropna(axis=0, subset=['description', 'long_description'])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-1:-Remove-HTML-tags">
+<a class="anchor" href="#Step-1:-Remove-HTML-tags" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 1: Remove HTML tags<a class="anchor-link" href="#Step-1:-Remove-HTML-tags"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">remove_html_tags</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s1">'html.parser'</span><span class="p">)</span>
+    <span class="n">stripped_text</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">stripped_text</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'no_html'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">remove_html_tags</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-2:-Add-space">
+<a class="anchor" href="#Step-2:-Add-space" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 2: Add space<a class="anchor-link" href="#Step-2:-Add-space"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="2.1-Normalize-space-rules">
+<a class="anchor" href="#2.1-Normalize-space-rules" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Normalize space rules<a class="anchor-link" href="#2.1-Normalize-space-rules"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="k">def</span> <span class="nf">add_spaces</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="c1"># Space after punc. Only apply to !.,;:? </span>
+    <span class="c1"># Eg: Dislike.However =&gt; Dislike. However </span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"([!.,;:?])([A-Z])"</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\1 \2"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># Space before open bracket</span>
+    <span class="c1"># Eg: Dislike(sth) =&gt; Dislike (sth)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"([A-za-z])([\(\{\[])"</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'\1 \2'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># Space after close bracket</span>
+    <span class="c1"># Eg: (such as)I like =&gt; (such as) I like</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"([\)\}\]])([A-Za-z])"</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'\1 \2'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># Space between word and - or +</span>
+    <span class="c1"># Eg: I like it because-fast -pretty =&gt; I like it because - fast - pretty</span>
+    <span class="c1"># Eg: I like mac-book =&gt; keep the same</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"([A-Za-z])([-+])(\s)"</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'\1 \2 '</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'add_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'no_html'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">add_spaces</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">temp_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">no_html</span> <span class="o">!=</span> <span class="n">df</span><span class="o">.</span><span class="n">add_space</span><span class="p">][[</span><span class="s2">"no_html"</span><span class="p">,</span> <span class="s2">"add_space"</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Impacted row"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_df</span><span class="p">))</span>
+<span class="n">temp_df</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Impacted row 2
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>no_html</th>
+      <th>add_space</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>53</th>
+      <td>Experience in Agile. development methodologies. Integration of user-facing elements developed by a back-end developer with server- side logic</td>
+      <td>Experience in Agile. development methodologies. Integration of user-facing elements developed by a back-end developer with server - side logic</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="2.2-Add-space-and-remove-listing-number">
+<a class="anchor" href="#2.2-Add-space-and-remove-listing-number" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Add space and remove listing number<a class="anchor-link" href="#2.2-Add-space-and-remove-listing-number"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">string</span>
+<span class="k">def</span> <span class="nf">handle_listing_number</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Only remove if it is listing numbers such as 1. 2. 3.</span>
+<span class="sd">    """</span>
+    <span class="n">listing</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">remove_listing_number</span><span class="p">(</span><span class="n">match_obj</span><span class="p">):</span>
+        <span class="n">listing_number</span> <span class="o">=</span> <span class="n">match_obj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="k">if</span> <span class="n">match_obj</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">listing_number</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">""</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">listing_number</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="c1"># save to listing if it is digit</span>
+                <span class="n">listing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">result</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s2">"."</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">" "</span>
+    
+    <span class="n">new_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\b([\.\;\:\!\?\D]*)([1-9])\.\s"</span><span class="p">,</span> <span class="n">remove_listing_number</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listing</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">listing_copy</span> <span class="o">=</span> <span class="n">listing</span><span class="p">[:]</span>
+        <span class="n">listing_copy</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="c1"># if listing is sorted</span>
+        <span class="k">if</span> <span class="n">listing_copy</span> <span class="o">==</span> <span class="n">listing</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">new_text</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"add_space2"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'add_space'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">handle_listing_number</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">temp_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">add_space2</span> <span class="o">!=</span> <span class="n">df</span><span class="o">.</span><span class="n">add_space</span><span class="p">][[</span><span class="s2">"add_space"</span><span class="p">,</span> <span class="s2">"add_space2"</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Impacted row"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_df</span><span class="p">))</span>
+<span class="n">temp_df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Impacted row 0
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>add_space</th>
+      <th>add_space2</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-3:-Expand-contractions">
+<a class="anchor" href="#Step-3:-Expand-contractions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 3: Expand contractions<a class="anchor-link" href="#Step-3:-Expand-contractions"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">symspellpy</span> <span class="kn">import</span> <span class="n">SymSpell</span><span class="p">,</span> <span class="n">Verbosity</span><span class="p">,</span> <span class="n">helpers</span>
+<span class="kn">import</span> <span class="nn">contractions</span>
+<span class="k">def</span> <span class="nf">expand_contractions</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    expand shortened words, e.g. don't to do not</span>
+<span class="sd">    contractions library does not keep character case =&gt; need to transfer casing from origin text to fixed text</span>
+<span class="sd">    """</span>
+    <span class="n">expanded_text</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">transfer_casing_for_similar_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">contractions</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+    <span class="c1"># uppercase I</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\bi\b"</span><span class="p">,</span> <span class="s2">"I"</span><span class="p">,</span> <span class="n">expanded_text</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"expand_contractions"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"add_space2"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">expand_contractions</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-4:-Remove-redundant-elements">
+<a class="anchor" href="#Step-4:-Remove-redundant-elements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 4: Remove redundant elements<a class="anchor-link" href="#Step-4:-Remove-redundant-elements"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">remove_redundant_elements</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="c1"># remove urls</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"http\S+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># remove phone</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[\+]?[(]?[0-9]</span><span class="si">{3}</span><span class="s2">[)]?[-\s\.]?[0-9]</span><span class="si">{3}</span><span class="s2">[-\s\.]?[0-9]{4,6}"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># remove email</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[\w.+-]+@[\w-]+\.[\w.-]+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># remove newline</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\t\r</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"   "</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+    <span class="c1"># remove redundant whitespaces</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"no_redundant"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"expand_contractions"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">remove_redundant_elements</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-5:-Remove-emojies">
+<a class="anchor" href="#Step-5:-Remove-emojies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 5: Remove emojies<a class="anchor-link" href="#Step-5:-Remove-emojies"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">emoji</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">emoji</span>
+<span class="k">def</span> <span class="nf">remove_emoji</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">emoji</span><span class="o">.</span><span class="n">get_emoji_regexp</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"no_emoji"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"no_redundant"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">remove_emoji</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-6:-Removing-accented-characters">
+<a class="anchor" href="#Step-6:-Removing-accented-characters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 6: Removing accented characters<a class="anchor-link" href="#Step-6:-Removing-accented-characters"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">unidecode</span>
+<span class="k">def</span> <span class="nf">remove_accented_chars</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">unidecode</span><span class="o">.</span><span class="n">unidecode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"no_accented"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"no_emoji"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">remove_accented_chars</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-7:-Collapse-duplicated-punctuation">
+<a class="anchor" href="#Step-7:-Collapse-duplicated-punctuation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 7: Collapse duplicated punctuation<a class="anchor-link" href="#Step-7:-Collapse-duplicated-punctuation"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+<span class="k">def</span> <span class="nf">collapse_duplicated_punctuations</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    collapse duplicated punctations</span>
+<span class="sd">    because we added space to separate punc and word in step 3, no need to append " " after punc</span>
+<span class="sd">    """</span>
+    <span class="n">newtext</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">:</span>
+            <span class="n">newtext</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">newtext</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">newtext</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"no_duplicated_punc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"no_accented"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">collapse_duplicated_punctuations</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-8:-Remove-consecutive-spaces">
+<a class="anchor" href="#Step-8:-Remove-consecutive-spaces" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 8: Remove consecutive spaces<a class="anchor-link" href="#Step-8:-Remove-consecutive-spaces"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"no_consecutive_spaces"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">no_duplicated_punc</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s2">"\s+"</span><span class="p">:</span><span class="s2">" "</span><span class="p">},</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"no_consecutive_spaces"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">no_consecutive_spaces</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:2: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-9:-Lower-case">
+<a class="anchor" href="#Step-9:-Lower-case" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 9: Lower case<a class="anchor-link" href="#Step-9:-Lower-case"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'lower_case'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"no_consecutive_spaces"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'lower_case'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'participate in all. development activities. write high-quality code to implement. features or fix bugs and implement unit test'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-9:-Remove-stopwords">
+<a class="anchor" href="#Step-9:-Remove-stopwords" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 9: Remove stopwords<a class="anchor-link" href="#Step-9:-Remove-stopwords"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'en_core_web_md'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">remove_stop_words</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">no_stop_words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="o">.</span><span class="n">is_stop</span><span class="p">:</span>
+            <span class="n">no_stop_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">no_stop_words</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'no_sw'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'lower_case'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">remove_stop_words</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  """Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'no_sw'</span><span class="p">][</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'chance work talented developers , following high standard . development practices ci / cd processes'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Load-preprocessed-datasets-(If-it-is-availabel)">
+<a class="anchor" href="#Load-preprocessed-datasets-(If-it-is-availabel)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load preprocessed datasets (If it is availabel)<a class="anchor-link" href="#Load-preprocessed-datasets-(If-it-is-availabel)"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">job_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"job_df.csv"</span><span class="p">)</span>
+<span class="n">course_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"course_df.csv"</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Implement-the-Recommender">
+<a class="anchor" href="#Implement-the-Recommender" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implement the Recommender<a class="anchor-link" href="#Implement-the-Recommender"> </a>
+</h1>
+<p>We will develop the recommender, which is used to suggest jobs based on learned courses.</p>
+<p>To recommend the jobs based on courses we leverage 2 models via 2 steps:</p>
+<p><strong>Step 1:</strong> Firstly, we use sentence transformer model to calculate the vector embeddings for chosen courses and jobs. Then we compare the the similarity score (cosine score) between them and filter the top 10.</p>
+<p><strong>Step 2:</strong> Secondly, we use the NER model to extract the skills from chosen courses and courses. Then we calculate the score for each job by counting the matching skills with chosen courses. That score will be used to sort the jobs to produce the final order.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Load-the-NER-model">
+<a class="anchor" href="#Load-the-NER-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load the NER model<a class="anchor-link" href="#Load-the-NER-model"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">checkpoint</span> <span class="o">=</span> <span class="s2">"mrm8488/codebert-base-finetuned-stackoverflow-ner"</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForTokenClassification</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForTokenClassification</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">"token-classification"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Load-the-sentence-transformer">
+<a class="anchor" href="#Load-the-sentence-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load the sentence transformer<a class="anchor-link" href="#Load-the-sentence-transformer"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span><span class="p">,</span> <span class="n">util</span>
+<span class="n">sent_model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s1">'paraphrase-MiniLM-L12-v2'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Define-helpers-functions">
+<a class="anchor" href="#Define-helpers-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Define helpers functions<a class="anchor-link" href="#Define-helpers-functions"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">ent</span><span class="p">):</span>
+    <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Ġ'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ent</span>
+
+<span class="k">def</span> <span class="nf">merge_B_I_entities</span><span class="p">(</span><span class="n">ents</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ents</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ent</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">ent</span> <span class="o">=</span> <span class="n">add_space</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ent</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'B-'</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">next_ent</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="ow">and</span> <span class="n">next_ent</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'I-'</span><span class="p">:</span>
+                <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">add_space</span><span class="p">(</span><span class="n">next_ent</span><span class="p">)[</span><span class="s1">'word'</span><span class="p">]</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span> 
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+                    <span class="n">next_ent</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">ent</span><span class="p">[</span><span class="s1">'end'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">'end'</span><span class="p">]</span>
+            <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">results</span> 
+
+<span class="k">def</span> <span class="nf">merge_entity</span><span class="p">(</span><span class="n">ent1</span><span class="p">,</span> <span class="n">ent2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ent1</span><span class="p">[</span><span class="s1">'end'</span><span class="p">]</span> <span class="o">==</span> <span class="n">ent2</span><span class="p">[</span><span class="s1">'start'</span><span class="p">]:</span>
+        <span class="n">ent</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'start'</span><span class="p">:</span> <span class="n">ent1</span><span class="p">[</span><span class="s1">'start'</span><span class="p">],</span> <span class="s1">'end'</span><span class="p">:</span> <span class="n">ent2</span><span class="p">[</span><span class="s1">'end'</span><span class="p">],</span> <span class="s1">'entity'</span><span class="p">:</span> <span class="n">ent1</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">],</span> <span class="s1">'word'</span><span class="p">:</span> <span class="p">(</span><span class="n">ent1</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">+</span><span class="n">ent2</span><span class="p">[</span><span class="s1">'word'</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">ent</span>
+
+<span class="k">def</span> <span class="nf">merge_similar_entities</span><span class="p">(</span><span class="n">ents</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hash_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">ents</span><span class="p">:</span>
+        <span class="n">hash_map</span><span class="p">[</span><span class="n">ent</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">hash_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">new_ents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">merge_ent</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">merge_entity</span><span class="p">(</span><span class="n">merge_ent</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">temp</span><span class="p">:</span>
+                <span class="n">merge_ent</span> <span class="o">=</span> <span class="n">temp</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_ents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merge_ent</span><span class="p">)</span>
+                <span class="n">merge_ent</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">merge_ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">merge_ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">new_ents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merge_ent</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">+=</span> <span class="n">new_ents</span> 
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="k">def</span> <span class="nf">extract_skills</span><span class="p">(</span><span class="n">desc</span><span class="p">):</span>
+    <span class="n">ents</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">merge_B_I_entities</span><span class="p">(</span><span class="n">ents</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">merge_similar_entities</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="n">skills</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">skills</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">skills</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_skills_from_course_titles</span><span class="p">(</span><span class="n">course_titles</span><span class="p">):</span>
+    <span class="n">course_skills</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">skills</span> <span class="ow">in</span> <span class="n">course_df</span><span class="p">[</span><span class="n">course_df</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">course_titles</span><span class="p">)][</span><span class="s1">'skills'</span><span class="p">]:</span>
+        <span class="n">course_skills</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">skills</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">course_skills</span>
+
+<span class="k">def</span> <span class="nf">show_results</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Define-Recommender-class">
+<a class="anchor" href="#Define-Recommender-class" aria-hidden="true"><span class="octicon octicon-link"></span></a>Define Recommender class<a class="anchor-link" href="#Define-Recommender-class"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="k">def</span> <span class="nf">get_skills_from_course_titles</span><span class="p">(</span><span class="n">course_titles</span><span class="p">):</span>
+    <span class="n">course_skills</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">skills</span> <span class="ow">in</span> <span class="n">course_df</span><span class="p">[</span><span class="n">course_df</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">course_titles</span><span class="p">)][</span><span class="s1">'skills'</span><span class="p">]:</span>
+        <span class="n">course_skills</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">skills</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">course_skills</span>
+
+<span class="k">class</span> <span class="nc">Recommender</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ner_classifier</span><span class="p">,</span> <span class="n">sent_model</span><span class="p">,</span> <span class="n">course_df</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">ner_classifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sent_model</span> <span class="o">=</span> <span class="n">sent_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">course_info</span> <span class="o">=</span> <span class="n">course_df</span>
+        <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">(</span><span class="n">course_df</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">course_df</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">course_info</span> <span class="o">=</span> <span class="n">course_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">course_info</span><span class="p">[</span><span class="s1">'skills'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">course_info</span><span class="p">[</span><span class="s1">'extract_skills'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_skills</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extract_skills</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
+        <span class="n">ents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">Recommender</span><span class="o">.</span><span class="n">merge_B_I_entities</span><span class="p">(</span><span class="n">ents</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">Recommender</span><span class="o">.</span><span class="n">merge_similar_entities</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">skills</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">skills</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">skills</span><span class="p">)</span> 
+
+    <span class="k">def</span> <span class="nf">recommend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">course_titles</span><span class="p">,</span> <span class="n">job_info</span><span class="p">,</span> <span class="n">topk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Job</span><span class="p">]:</span>
+        <span class="n">c_embed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_model</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">course_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">course_info</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">course_titles</span><span class="p">)][</span><span class="s1">'no_sw'</span><span class="p">]),</span> <span class="n">convert_to_tensor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">c_avg_embed</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">c_embed</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">job_descs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">job_info</span><span class="p">[</span><span class="s1">'no_sw'</span><span class="p">])</span>
+        <span class="n">job_embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_model</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">job_descs</span><span class="p">,</span> <span class="n">convert_to_tensor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">Recommender</span><span class="o">.</span><span class="n">compare_embeds</span><span class="p">(</span><span class="n">c_avg_embed</span><span class="p">,</span> <span class="n">job_embeds</span><span class="p">,</span> <span class="n">job_info</span><span class="p">)</span>
+        <span class="n">skill_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="n">my_skills</span> <span class="o">=</span> <span class="n">Recommender</span><span class="o">.</span><span class="n">get_skills_from_course_titles</span><span class="p">(</span><span class="n">course_titles</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># calculate similar skills scores</span>
+        <span class="k">for</span> <span class="n">skills</span> <span class="ow">in</span> <span class="n">skill_list</span><span class="p">:</span>
+            <span class="n">mutual</span> <span class="o">=</span> <span class="n">my_skills</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">skills</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">my_skills</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mutual</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">my_skills</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+            <span class="n">final_score</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">+</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_score</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">topk</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="p">[:</span><span class="n">topk</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_skills_from_course_titles</span><span class="p">(</span><span class="n">course_titles</span><span class="p">):</span>
+        <span class="n">course_skills</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">skills</span> <span class="ow">in</span> <span class="n">course_df</span><span class="p">[</span><span class="n">course_df</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">course_titles</span><span class="p">)][</span><span class="s1">'skills'</span><span class="p">]:</span>
+            <span class="n">course_skills</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">skills</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">course_skills</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">ent</span><span class="p">):</span>
+        <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'Ġ'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ent</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_B_I_entities</span><span class="p">(</span><span class="n">ents</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ents</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+            <span class="n">ent</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">ent</span> <span class="o">=</span> <span class="n">add_space</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ent</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'B-'</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">next_ent</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="ow">and</span> <span class="n">next_ent</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'I-'</span><span class="p">:</span>
+                    <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">add_space</span><span class="p">(</span><span class="n">next_ent</span><span class="p">)[</span><span class="s1">'word'</span><span class="p">]</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span> 
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+                        <span class="n">next_ent</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">ent</span><span class="p">[</span><span class="s1">'end'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ents</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">'end'</span><span class="p">]</span>
+                <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">results</span> 
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_entity</span><span class="p">(</span><span class="n">ent1</span><span class="p">,</span> <span class="n">ent2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ent1</span><span class="p">[</span><span class="s1">'end'</span><span class="p">]</span> <span class="o">==</span> <span class="n">ent2</span><span class="p">[</span><span class="s1">'start'</span><span class="p">]:</span>
+            <span class="n">ent</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'start'</span><span class="p">:</span> <span class="n">ent1</span><span class="p">[</span><span class="s1">'start'</span><span class="p">],</span> <span class="s1">'end'</span><span class="p">:</span> <span class="n">ent2</span><span class="p">[</span><span class="s1">'end'</span><span class="p">],</span> <span class="s1">'entity'</span><span class="p">:</span> <span class="n">ent1</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">],</span> <span class="s1">'word'</span><span class="p">:</span> <span class="p">(</span><span class="n">ent1</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">+</span><span class="n">ent2</span><span class="p">[</span><span class="s1">'word'</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()}</span>
+            <span class="k">return</span> <span class="n">ent</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_similar_entities</span><span class="p">(</span><span class="n">ents</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hash_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">ents</span><span class="p">:</span>
+            <span class="n">hash_map</span><span class="p">[</span><span class="n">ent</span><span class="p">[</span><span class="s1">'entity'</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">hash_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">new_ents</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">merge_ent</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">Recommender</span><span class="o">.</span><span class="n">merge_entity</span><span class="p">(</span><span class="n">merge_ent</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">temp</span><span class="p">:</span>
+                    <span class="n">merge_ent</span> <span class="o">=</span> <span class="n">temp</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_ents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merge_ent</span><span class="p">)</span>
+                    <span class="n">merge_ent</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">merge_ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">merge_ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">new_ents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merge_ent</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">+=</span> <span class="n">new_ents</span> 
+        <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">ent</span><span class="p">[</span><span class="s1">'word'</span><span class="p">]</span> <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compare_embeds</span><span class="p">(</span><span class="n">c_embed</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">job_embeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">],</span> <span class="n">job_info</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">job_embed</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">job_embeds</span><span class="p">):</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">pytorch_cos_sim</span><span class="p">(</span><span class="n">c_embed</span><span class="p">,</span> <span class="n">job_embed</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">job_info</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">job_info</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">job_info</span><span class="p">[</span><span class="s1">'skills'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">score</span><span class="o">.</span><span class="n">item</span><span class="p">()])</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="nd">@staticmethod</span>  
+    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">outputs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Inference">
+<a class="anchor" href="#Inference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Inference<a class="anchor-link" href="#Inference"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">course_df</span><span class="p">[</span><span class="s1">'skills'</span><span class="p">]</span> <span class="o">=</span> <span class="n">course_df</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_skills</span><span class="p">)</span>
+<span class="n">job_df</span><span class="p">[</span><span class="s1">'skills'</span><span class="p">]</span> <span class="o">=</span> <span class="n">job_df</span><span class="p">[</span><span class="s1">'long_description'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_skills</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">my_recommender</span> <span class="o">=</span> <span class="n">Recommender</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">sent_model</span><span class="p">,</span> <span class="n">course_df</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">course_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Artificial Intelligence'</span><span class="p">,</span> <span class="s1">'Machine Learning'</span><span class="p">,</span> <span class="s1">'Mathematics for Computing 2'</span><span class="p">,</span> <span class="s1">'Foundations of Artificial Intelligence for STEM'</span><span class="p">]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">my_recommender</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">course_titles</span><span class="p">,</span> <span class="n">job_df</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_results</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[77, 'Software Engineer in Data Science', "['google deepmind', 'autopilot', 'autopilot ai', 'vinai', 'python', 'v', 'gpus', 'ai tooling.', 'dashboards', 'numpy', 'vinai autopilot', 'pandas', 'h', 'vin b']", 0.34073367118835446]
+[74, 'All-round Engineer', "['ue', 'laravel engine', 'agile', 'js', 'search engine', 'php', 'python', '4', 'batch']", 0.32163201570510863]
+[92, 'Software Engineer, Observability', "['react', 'grab', 'elk', 'jaeger', 'python', 'nodejs', 'prometheus', 'amazon web services', 'observability', 'go', 'java', 'aws', 'unified observability', 'reduxflow', 'angular', 'golang']", 0.3089586853981018]
+[127, 'AI Engineer, Kobiton', "['js', 'backend', 'mobiles', 'vietnam', 'java', 'mobile', 'desktops', 'postgredb', 'nguyen', 'ptim', 'k8s', 'golang', 'ghn express', 'docker', 'tablets', 'node', '0906738', 'mob', 'restful api', 'back', 'telegram', 'mongodb', 'p']", 0.30338029861450194]
+[138, 'AI Engineer, Kobiton', "['rbvh', 'hcmc', 'c++', 'c', 'sap', 'python union', 'robert bosch gmbh', 'jav', 'robert bosch', 'matlab', 'microcontroller']", 0.30338029861450194]
+[129, 'Fresh Software Engineer', "['orm', 'win', 'client', 'kms', 'c#', 'javascript', '19', '.net', 'wp', 'upstar labs', 'scrum', 'mysql', 'entity', 'cov', 'sql', 'asp.net mvc', 'nhibernate', 'microsoft sql server', 'qasymph', 'winform', 'web api']", 0.26918667554855347]
+[89, 'Bridge Software Engineer (BSE)', "['c++', 'ho', 'c', '.net', 'project manager', 'java', 'ha']", 0.2661460340023041]
+[79, 'Full Stack Software Engineer (.NET, C#)', "['reactjs', 'html', 'asp.net core', 'vs', '8:00 âģĵ 10: 00 am', 'azure devops', 'c#', 'javascript', 'git', 'hub', 'sql', '.net', 'dan', 'agile', 'angular']", 0.26532386541366576]
+[0, 'Fresher Python Software Engineer', "['client', 'kms', '19', 'cov-', 'k', 'upstar labs']", 0.2651121497154236]
+[113, '[ECM] Test Engineer', "['vuejs', 'loopback', 'react', 'ui-ux', 'kms', 'express', 'nodejs', 'kobiton', 'tricentis', 'angularjs', '19emic', 'katalon', 'k', '($100m', 'mobile', 'covid', 'koa', 'qasymphony']", 0.26384042501449584]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">course_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Peer-to-Peer Networks'</span><span class="p">,</span><span class="s1">'Distributed Systems'</span><span class="p">]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">my_recommender</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">course_titles</span><span class="p">,</span> <span class="n">job_df</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_results</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[92, 'Software Engineer, Observability', "['react', 'grab', 'elk', 'jaeger', 'python', 'nodejs', 'prometheus', 'amazon web services', 'observability', 'go', 'java', 'aws', 'unified observability', 'reduxflow', 'angular', 'golang']", 0.29281051754951476]
+[78, 'SOFTWARE ENGINEER (HCM)', "['$700', 'devops', 'data engineer', '15000000.', 'vue.js', 'relational', 'java', '. 40000000', 'c¦ung', 'data analyst', 'angular.js', 'ch', 'v', '24-09-2021', 'yãĭu', 'sql', 'jvm', '$2000', 'python', 'react.js', 'scala']", 0.2801404237747192]
+[36, 'System/Network Engineer_Freshers', "['hypervisors', '3 switch', 'shell', 'jun', 'super computer', 'vmware', 'qemui', 'vlan', 'linux', 'kvm', 'hyper-v', 'l', 'hpc']", 0.2568916082382202]
+[113, '[ECM] Test Engineer', "['vuejs', 'loopback', 'react', 'ui-ux', 'kms', 'express', 'nodejs', 'kobiton', 'tricentis', 'angularjs', '19emic', 'katalon', 'k', '($100m', 'mobile', 'covid', 'koa', 'qasymphony']", 0.2493357181549072]
+[77, 'Software Engineer in Data Science', "['google deepmind', 'autopilot', 'autopilot ai', 'vinai', 'python', 'v', 'gpus', 'ai tooling.', 'dashboards', 'numpy', 'vinai autopilot', 'pandas', 'h', 'vin b']", 0.24794490337371825]
+[103, 'Software Engineer', "['5', 'html', 'client', 'cocos creator', 'cocos', 'javascript', 'css', '2dx', 'restful api', 'unity', 'mobile', 'type']", 0.24549003839492797]
+[47, 'Fullstack Software Engineer (ReactJS/NodeJS/Go)', "['n', 'svn', 'webpack', 'javascript', 'git', 'es', '6', 'bower', 'reactjs', 'golang', 'babel', 'chotot', 'docker', 'web browser', 'nodejs', 'mac', 'json', 'grunt', 'full stack']", 0.2437905728816986]
+[18, 'Software Engineer (Golang/Java)', "['server', 'backend', 'tidb', 'java', 'container', 'javascript', 'rdbms', 'git', 'css', 'angularjs', 'reactjs', 'golang', 'html', 'docker', 'mysql', 'redis', 'kafka', 'nosql', 'zalopay', 'frontend', 'jquery']", 0.24373272657394407]
+[34, 'Automation Test Engineer', "['mocha', 'kms', 'appium', 'testng', 'kms labsasymph', 'nightwatch', 'jasmine', 'scrum', 'selenium']", 0.23755048513412474]
+[104, 'Software Engineer', "['microsoft .net', 'sql server']", 0.23728473186492918]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">my_skills</span> <span class="o">=</span> <span class="n">get_skills_from_course_titles</span><span class="p">(</span><span class="n">course_titles</span><span class="p">)</span>
+<span class="n">my_skills</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="minhdang241/minhdg-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/minhdg-blog/implementation/2021/08/30/NLP_12_Job_Recommendation_for_CS_IT.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/minhdg-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/minhdg-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/minhdang241" title="minhdang241"><svg class="svg-icon grey"><use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/MinhDan18587327" title="MinhDan18587327"><svg class="svg-icon grey"><use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
