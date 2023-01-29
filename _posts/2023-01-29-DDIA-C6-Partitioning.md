@@ -1,10 +1,13 @@
 ---
+
 toc: true
 layout: post
 description: A minimal example of using markdown with fastpages 2.
 categories: [markdown]
 title: An Example Markdown Post
+
 ---
+
 # Chapter 6: Partitioning
 
 > *partition* == *shard* in MongoDB, Elasticsearch, and SolrCloud == *region* in HBase == *tablet* in Bigtable == a *vnode* in Cassandra and Riak == *vBucket* in CouchBase.
