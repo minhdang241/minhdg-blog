@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Chapter 6 - Partitioning | NLP365</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Chapter 6 - Partitioning" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A note on chapter 6 of the book Designing Data-Intensive Applications" />
+<meta property="og:description" content="A note on chapter 6 of the book Designing Data-Intensive Applications" />
+<link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html" />
+<meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html" />
+<meta property="og:site_name" content="NLP365" />
+<meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/partitioning_thumbnail.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-01-29T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"A note on chapter 6 of the book Designing Data-Intensive Applications","url":"https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html"},"headline":"Chapter 6 - Partitioning","dateModified":"2023-01-29T00:00:00-06:00","datePublished":"2023-01-29T00:00:00-06:00","image":"https://minhdang241.github.io/minhdg-blog/images/partitioning_thumbnail.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/minhdg-blog/">NLP365</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/minhdg-blog/about/">About Me</a><a class="page-link" href="/minhdg-blog/search/">Search</a><a class="page-link" href="/minhdg-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Chapter 6 - Partitioning</h1><p class="page-description">A note on chapter 6 of the book Designing Data-Intensive Applications</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2023-01-29T00:00:00-06:00" itemprop="datePublished">
+        Jan 29, 2023
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#markdown">markdown</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#DDIA">DDIA</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#chapter-6-partitioning">Chapter 6: Partitioning</a>
+<ul>
+<li class="toc-entry toc-h5"><a href="#purpose">Purpose</a></li>
+<li class="toc-entry toc-h2"><a href="#partitioning-of-key-value-data">Partitioning of Key-Value Data</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#partitioning-by-key-range">Partitioning by Key Range</a></li>
+<li class="toc-entry toc-h3"><a href="#partitioning-by-hash-of-key">Partitioning by Hash of Key</a></li>
+<li class="toc-entry toc-h3"><a href="#skewed-workloads-and-relieving-hot-spots">Skewed Workloads and Relieving Hot Spots</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#partitioning-and-secondary-indexes">Partitioning and Secondary Indexes</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#partitioning-secondary-indexes-by-document">Partitioning Secondary Indexes by Document</a></li>
+<li class="toc-entry toc-h3"><a href="#partitioning-secondary-indexes-by-term">Partitioning Secondary Indexes by Term</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#rebalancing-partitions">Rebalancing Partitions</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#rebalancing-strategies">Rebalancing Strategies</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#hash-mod-n">Hash Mod N</a></li>
+<li class="toc-entry toc-h4"><a href="#fixed-number-of-partitions">Fixed number of partitions</a></li>
+<li class="toc-entry toc-h4"><a href="#dynamic-number-of-partitions">Dynamic number of partitions</a></li>
+<li class="toc-entry toc-h4"><a href="#partitioning-proportionally-to-nodes">Partitioning proportionally to nodes</a></li>
+<li class="toc-entry toc-h4"><a href="#request-routing">Request Routing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#glossary">Glossary:</a></li>
+</ul>
+</li>
+</ul><h1 id="chapter-6-partitioning">
+<a class="anchor" href="#chapter-6-partitioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chapter 6: Partitioning</h1>
+
+<blockquote>
+  <p><em>partition</em> == <em>shard</em> in MongoDB, Elasticsearch, and SolrCloud == <em>region</em> in HBase == <em>tablet</em> in Bigtable == a <em>vnode</em> in Cassandra and Riak == <em>vBucket</em> in CouchBase.</p>
+</blockquote>
+
+<h5 id="purpose">
+<a class="anchor" href="#purpose" aria-hidden="true"><span class="octicon octicon-link"></span></a>Purpose</h5>
+
+<h2 id="partitioning-of-key-value-data">
+<a class="anchor" href="#partitioning-of-key-value-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning of Key-Value Data</h2>
+
+<blockquote>
+  <p>A Hot spot: A partition with a disproportionately high load.</p>
+</blockquote>
+
+<h3 id="partitioning-by-key-range">
+<a class="anchor" href="#partitioning-by-key-range" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning by Key Range</h3>
+
+<p>Assign a range of <strong>sorted keys</strong> to a partition.</p>
+
+<p><strong>Note:</strong></p>
+
+<p>Sorting helps to improve the performance of range queries. Yet, the key should be chosen with caution to avoid hot spots in case the application often accesses the data with close keys in the sorted order.</p>
+
+<h3 id="partitioning-by-hash-of-key">
+<a class="anchor" href="#partitioning-by-hash-of-key" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning by Hash of Key</h3>
+
+<p>Assign a range of hash values (hashing keys) to a partition.</p>
+
+<p><strong>Note:</strong></p>
+
+<p>This approach makes sure that keys are distributed evenly across partitions since it destroys the key order -  after hashing, two similar keys will no longer close in the sorted order.</p>
+
+<h3 id="skewed-workloads-and-relieving-hot-spots">
+<a class="anchor" href="#skewed-workloads-and-relieving-hot-spots" aria-hidden="true"><span class="octicon octicon-link"></span></a>Skewed Workloads and Relieving Hot Spots</h3>
+
+<p>In either case, there is still a chance to suffer the celebrity issue since it does not depend on the key ranges but the key itself. To solve this problem, we can add a random element to the key. For example, adding a 2-digit decimal to the key will make the data for that key split into 100 keys. Yet, this solution comes with a performance degradation when read since we have to request data from 100 keys instead of 1. Also, not all the key needs to be split, optimally, we should detect which key has high throughput and split it.</p>
+
+<h2 id="partitioning-and-secondary-indexes">
+<a class="anchor" href="#partitioning-and-secondary-indexes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning and Secondary Indexes</h2>
+
+<blockquote>
+  <p>The secondary index is used to search for occurrences of a particular value.</p>
+</blockquote>
+
+<p>The problem with secondary indexes is that they don’t neatly map to partitions.</p>
+
+<h3 id="partitioning-secondary-indexes-by-document">
+<a class="anchor" href="#partitioning-secondary-indexes-by-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning Secondary Indexes by Document</h3>
+
+<p><img src="/minhdg-blog/images/eb58f064e477183561d38b8d1c0f721bf7617393.png" alt="" title="Partitioning secondary indexes by document"></p>
+
+<p>In this approach, we create local indexes for each partition. In order words, each partition maintains its secondary indexes, covering only the documents available in that partition.</p>
+
+<p>For example, after we create the secondary index on <strong>color</strong>. When a red car with ID <strong>306</strong> is added to the database, the database partition of partition 0 automatically adds the ID of 306 to the list of document IDs for the index entry <code class="language-plaintext highlighter-rouge">color:red</code>.</p>
+
+<p>This approach adds up complexity on read. Whenever we need to query a list of cars using color, we need to send a request to all the partitions, retrieve all the data and then combine it to generate the result.</p>
+
+<h3 id="partitioning-secondary-indexes-by-term">
+<a class="anchor" href="#partitioning-secondary-indexes-by-term" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning Secondary Indexes by Term</h3>
+
+<p><img src="/minhdg-blog/images/bc9c7d2a677ff25aa74382e6efcf6e4306558973.png" alt="" title="Partitioning secondary indexes by term"></p>
+
+<p>In this approach, we apply the same mechanism as <strong>partitioning by key range or partitioning by hash of key</strong>. We create a global index covering all the data across the partitions. The global index will be partitioned by the range and stored across partitions. Now, instead of each partition maintaining a list of document IDs for the index entry <code class="language-plaintext highlighter-rouge">color:red</code>, only partition 0 maintains it. This helps to improve the performance when we need to scan a range of values using the color attribute. Yet, this approach adds up the complexity when writing, when we have multiple secondary indexes and each index partition, is placed on different partitions.</p>
+
+<h2 id="rebalancing-partitions">
+<a class="anchor" href="#rebalancing-partitions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rebalancing Partitions</h2>
+
+<p>No matter what rebalancing schemes are used, they should meet the following requirements:</p>
+
+<ul>
+  <li>
+    <p>After rebalancing, the load queries should be distributed evenly across nodes.</p>
+  </li>
+  <li>
+    <p>While rebalancing is happening, the database should still accept reads and writes.</p>
+  </li>
+  <li>
+    <p>No more data than necessary should be moved between nodes to reduce network and disk I/O loads.</p>
+  </li>
+</ul>
+
+<h3 id="rebalancing-strategies">
+<a class="anchor" href="#rebalancing-strategies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rebalancing Strategies</h3>
+
+<p>Strategies to assign partitions to nodes.</p>
+
+<h4 id="hash-mod-n">
+<a class="anchor" href="#hash-mod-n" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hash Mod N</h4>
+
+<p>Hash the partition key and mod the value by N to decide the target node.</p>
+
+<p><strong>Caveat:</strong></p>
+
+<p>When adding new a node or reducing a failed node, most of the key will need to move to another node, which is expensive.</p>
+
+<h4 id="fixed-number-of-partitions">
+<a class="anchor" href="#fixed-number-of-partitions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fixed number of partitions</h4>
+
+<p>Define a fixed number of partitions at the beginning and distributed the partitions evenly to nodes. Whenever, the number of nodes changes, the number of partitions on each node will be changed, either increasing when removing a node or decreasing when adding a node.</p>
+
+<p><strong>Caveat:</strong></p>
+
+<p>It is hard to choose the “just right” number of partitions at the beginning.</p>
+
+<h4 id="dynamic-number-of-partitions">
+<a class="anchor" href="#dynamic-number-of-partitions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic number of partitions</h4>
+
+<p>We config the min and max sizes of the partitions and use these numbers as the boundaries. Whenever the size of a partition is out of this boundary, we either split the partitions or merge them. In case of splitting, when a large dataset is split into 2 halves, one half will be sent to another node in the cluster. The advantage of this approach is that the number of partitions adapts to the total data volume.</p>
+
+<p><strong>Caveat:</strong></p>
+
+<p>The database is started with a single partition. Yet, it can be overcome by pre-splitting.</p>
+
+<h4 id="partitioning-proportionally-to-nodes">
+<a class="anchor" href="#partitioning-proportionally-to-nodes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning proportionally to nodes</h4>
+
+<p>The number of partitions stays unchanged when the number of nodes remains. Yet, it increases or decreases when we add a new node or remove a failed node respectively.</p>
+
+<h4 id="request-routing">
+<a class="anchor" href="#request-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request Routing</h4>
+
+<p><img src="/minhdg-blog/images/0f508f6930d682b8faa0a42fc4b67112ab413df8.png" alt="" title="Three different ways of routing a request to the right node"></p>
+
+<p>In general, there are three approaches to routing a request to the correct node. No matter what approach we choose, the key challenge is how can we update the knowledge of partitions when the partitions move from one node to another node.
+Many distributed database systems rely on third-party coordination services like ZooKeeper to keep track of cluster metadata.</p>
+
+<p><img src="/minhdg-blog/images/0c28f90cd54f96892fbf0832a17ca34f07eeb0e9.png" alt="" title="Using ZooKeeper to keep track of assignment of partitions to nodes"></p>
+
+<p>All the nodes and their partition mappings are registered in ZooKeeper. When there is a change in the mapping, ZooKeeper will notify the routing tier so that it can keep the routing information up to date.</p>
+
+<h2 id="glossary">
+<a class="anchor" href="#glossary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Glossary:</h2>
+
+<p><strong>Shared-nothing architecture == horizontal scaling == scaling out</strong></p>
+
+<p>In this architecture, each machine of the virtual machine running the database software is called a node. Each node uses its CPUs, RAM, and disks independently. Any coordination between nodes is done at the software level, using a conventional network.</p>
+
+  </div><a class="u-url" href="/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/minhdg-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="https://minhdang241.github.io/minhdg-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/minhdg-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
