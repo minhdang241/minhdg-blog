@@ -4,9 +4,7 @@ layout: post
 description: A note on chapter 6 of the book Designing Data-Intensive Applications
 categories: [note]
 title: Chapter 6 - Partitioning
-image: images/partitioning_thumbnail.png
 ---
-
 # Chapter 6: Partitioning
 
 > *partition* == *shard* in MongoDB, Elasticsearch, and SolrCloud == *region* in HBase == *tablet* in Bigtable == a *vnode* in Cassandra and Riak == *vBucket* in CouchBase.
