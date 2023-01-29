@@ -1,9 +1,9 @@
 ---
 toc: true
 layout: post
-description: A note on chapter 6 of the book Designing Data-Intensive Applications
-categories: [note]
-title: Chapter 6 - Partitioning
+description: A minimal example of using markdown with fastpages 2.
+categories: [markdown]
+title: An Example Markdown Post
 ---
 # Chapter 6: Partitioning
 
