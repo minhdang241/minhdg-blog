@@ -2,7 +2,7 @@
 toc: true
 layout: post
 description: A note on chapter 6 of the book Designing Data-Intensive Applications
-categories: [markdown]
+categories: [markdown, Designing Data-Intensive Applications]
 title: Chapter 6: Partitioning
 ---
 
