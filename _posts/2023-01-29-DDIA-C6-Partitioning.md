@@ -2,9 +2,10 @@
 
 toc: true
 layout: post
-description: A minimal example of using markdown with fastpages 2.
-categories: [markdown]
-title: An Example Markdown Post
+description: A note on chapter 6 of the book Designing Data-Intensive Applications
+categories: [markdown, DDIA]
+title: Chapter 6 - Partitioning
+image: images/partitioning_thumbnail.png
 
 ---
 
