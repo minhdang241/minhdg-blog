@@ -6,8 +6,8 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: NLP365
-description: NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general. 
+title: BLOG365
+description: BLOG365 Project. Within 365 days from 29/01/2023 I will publish a blog regarding ML&SWE in general. 
 github_username: minhdang241
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "minhdg-blog"

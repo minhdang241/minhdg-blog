@@ -13,7 +13,9 @@ image: images/partitioning_thumbnail.png
 
 > *partition* == *shard* in MongoDB, Elasticsearch, and SolrCloud == *region* in HBase == *tablet* in Bigtable == a *vnode* in Cassandra and Riak == *vBucket* in CouchBase.
 
-##### Purpose
+## Purpose
+
+Partitioning helps to improve scalability. A large dataset can be stored across many disks and the query load can be executed by multiple processors.
 
 ## Partitioning of Key-Value Data
 
