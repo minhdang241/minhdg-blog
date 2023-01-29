@@ -4,7 +4,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Chapter 6 - Partitioning | NLP365</title>
+<title>Chapter 6 - Partitioning | BLOG365</title>
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="Chapter 6 - Partitioning" />
 <meta property="og:locale" content="en_US" />
@@ -12,14 +12,14 @@
 <meta property="og:description" content="A note on chapter 6 of the book Designing Data-Intensive Applications" />
 <link rel="canonical" href="https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html" />
 <meta property="og:url" content="https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html" />
-<meta property="og:site_name" content="NLP365" />
+<meta property="og:site_name" content="BLOG365" />
 <meta property="og:image" content="https://minhdang241.github.io/minhdg-blog/images/partitioning_thumbnail.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2023-01-29T00:00:00-06:00" />
 <script type="application/ld+json">
 {"description":"A note on chapter 6 of the book Designing Data-Intensive Applications","url":"https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minhdang241.github.io/minhdg-blog/markdown/ddia/2023/01/29/DDIA-C6-Partitioning.html"},"headline":"Chapter 6 - Partitioning","dateModified":"2023-01-29T00:00:00-06:00","datePublished":"2023-01-29T00:00:00-06:00","image":"https://minhdang241.github.io/minhdg-blog/images/partitioning_thumbnail.png","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="NLP365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="/minhdg-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://minhdang241.github.io/minhdg-blog/feed.xml" title="BLOG365" /><link rel="shortcut icon" type="image/x-icon" href="/minhdg-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
@@ -70,7 +70,7 @@ window.onload = wrap_img;
 </head>
 <body><header class="site-header">
 
-  <div class="wrapper"><a class="site-title" rel="author" href="/minhdg-blog/">NLP365</a><nav class="site-nav">
+  <div class="wrapper"><a class="site-title" rel="author" href="/minhdg-blog/">BLOG365</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
         <label for="nav-trigger">
           <span class="menu-icon">
@@ -116,7 +116,7 @@ window.onload = wrap_img;
     <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#chapter-6-partitioning">Chapter 6: Partitioning</a>
 <ul>
-<li class="toc-entry toc-h5"><a href="#purpose">Purpose</a></li>
+<li class="toc-entry toc-h2"><a href="#purpose">Purpose</a></li>
 <li class="toc-entry toc-h2"><a href="#partitioning-of-key-value-data">Partitioning of Key-Value Data</a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#partitioning-by-key-range">Partitioning by Key Range</a></li>
@@ -153,8 +153,10 @@ window.onload = wrap_img;
   <p><em>partition</em> == <em>shard</em> in MongoDB, Elasticsearch, and SolrCloud == <em>region</em> in HBase == <em>tablet</em> in Bigtable == a <em>vnode</em> in Cassandra and Riak == <em>vBucket</em> in CouchBase.</p>
 </blockquote>
 
-<h5 id="purpose">
-<a class="anchor" href="#purpose" aria-hidden="true"><span class="octicon octicon-link"></span></a>Purpose</h5>
+<h2 id="purpose">
+<a class="anchor" href="#purpose" aria-hidden="true"><span class="octicon octicon-link"></span></a>Purpose</h2>
+
+<p>Partitioning helps to improve scalability. A large dataset can be stored across many disks and the query load can be executed by multiple processors.</p>
 
 <h2 id="partitioning-of-key-value-data">
 <a class="anchor" href="#partitioning-of-key-value-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partitioning of Key-Value Data</h2>
@@ -305,7 +307,7 @@ Many distributed database systems rely on third-party coordination services like
         </p>
       </div>
       <div class="footer-col">
-        <p>NLP365 Project. Within 365 days from 17/06/2021 I will publish a blog regarding NLP and ML in general.</p>
+        <p>BLOG365 Project. Within 365 days from 29/01/2023 I will publish a blog regarding ML&amp;SWE in general.</p>
       </div>
     </div>
 
