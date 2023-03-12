@@ -1,0 +1,269 @@
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Design Machine Learning System</h1><p class="page-description">My note of Design Machine Learning System</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2023-03-12T00:00:00-06:00" itemprop="datePublished">
+        Mar 12, 2023
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/minhdg-blog/categories/#Machine_Learning">Machine_Learning</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#chapter-1-overview-of-machine-learning-systems">Chapter 1: Overview of Machine Learning Systems</a></li>
+<li class="toc-entry toc-h1"><a href="#chapter-2-introduction-to-machine-learning-systems-design">Chapter 2: Introduction to Machine learning Systems Design</a></li>
+<li class="toc-entry toc-h1"><a href="#chapter-7-model-deployment-and-prediction-service">Chapter 7: Model Deployment and Prediction Service</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#batch-prediction-vs-online-prediction">Batch Prediction vs Online Prediction</a></li>
+<li class="toc-entry toc-h2"><a href="#model-compression">Model Compression</a></li>
+<li class="toc-entry toc-h2"><a href="#ml-on-the-cloud-and-on-the-edge">ML on the Cloud and on the Edge</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#chapter-8-data-distribution-shifts-and-monitoring">Chapter 8: Data Distribution Shifts and Monitoring</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#causes-of-ml-system-failures">Causes of ML System Failures</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#software-failures">Software failures</a></li>
+<li class="toc-entry toc-h3"><a href="#ml-specific-failures">ML-specific failures</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#data-distribution-shifts">Data Distribution Shifts</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#detecting-data-distribution-shifts">Detecting Data Distribution Shifts</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#monitoring-and-observability">Monitoring and Observability</a></li>
+<li class="toc-entry toc-h2"><a href="#ml-specific-metrics">ML-specific Metrics</a></li>
+<li class="toc-entry toc-h2"><a href="#monitoring-toolbox">Monitoring Toolbox</a></li>
+<li class="toc-entry toc-h2"><a href="#observability">Observability</a></li>
+</ul>
+</li>
+</ul><h1 id="chapter-1-overview-of-machine-learning-systems">
+<a class="anchor" href="#chapter-1-overview-of-machine-learning-systems" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chapter 1: Overview of Machine Learning Systems</h1>
+
+<ol>
+  <li>
+    <p>ML is not a magic tool that can solve all problems.</p>
+  </li>
+  <li>
+    <p>When developing an ML project, it’s critical to understand the requirements from all the stakeholders and how strict these requirements are.</p>
+  </li>
+  <li>
+    <p>Typically, the percentiles for latency that we should look at are p90, p95, and p99.</p>
+  </li>
+  <li>
+    <p>Fairness is a big concern when training models.</p>
+  </li>
+  <li>
+    <p>While it’s important to pursue research, most companies cannot afford it unless it leads to short-term business applications.</p>
+  </li>
+  <li>
+    <p>The trend shows that applications developed with the most/best data win.</p>
+  </li>
+</ol>
+
+<h1 id="chapter-2-introduction-to-machine-learning-systems-design">
+<a class="anchor" href="#chapter-2-introduction-to-machine-learning-systems-design" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chapter 2: Introduction to Machine learning Systems Design</h1>
+
+<ol>
+  <li>Most businesses don’t care about ML metrics unless they can move business metrics. Thus, if an ML system is built for a business, it must be motivated by business objectives.</li>
+</ol>
+
+<h1 id="chapter-7-model-deployment-and-prediction-service">
+<a class="anchor" href="#chapter-7-model-deployment-and-prediction-service" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chapter 7: Model Deployment and Prediction Service</h1>
+
+<h2 id="batch-prediction-vs-online-prediction">
+<a class="anchor" href="#batch-prediction-vs-online-prediction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Batch Prediction vs Online Prediction</h2>
+
+<p>There are three main modes of prediction:</p>
+
+<ul>
+  <li>
+    <p>Batch prediction -  using only batch features</p>
+  </li>
+  <li>
+    <p>Online prediction - using only batch features</p>
+  </li>
+  <li>
+    <p>Online prediction - using both batch features and streaming features</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>Batch features: features computed from historical data, such as data in databases and data warehouses.</p>
+
+  <p>Streaming features: Features computed from streaming data.</p>
+</blockquote>
+
+<h2 id="model-compression">
+<a class="anchor" href="#model-compression" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model Compression</h2>
+
+<p>The process makes the model smaller. This makes the models fit on edge devices. Making models smaller often makes them run faster.</p>
+
+<h2 id="ml-on-the-cloud-and-on-the-edge">
+<a class="anchor" href="#ml-on-the-cloud-and-on-the-edge" aria-hidden="true"><span class="octicon octicon-link"></span></a>ML on the Cloud and on the Edge</h2>
+
+<p>Running on the cloud costs a lot of money, while on edge requires a lot of optimization on the models’ sizes.</p>
+
+<h1 id="chapter-8-data-distribution-shifts-and-monitoring">
+<a class="anchor" href="#chapter-8-data-distribution-shifts-and-monitoring" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chapter 8: Data Distribution Shifts and Monitoring</h1>
+
+<h2 id="causes-of-ml-system-failures">
+<a class="anchor" href="#causes-of-ml-system-failures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Causes of ML System Failures</h2>
+
+<h3 id="software-failures">
+<a class="anchor" href="#software-failures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Software failures</h3>
+
+<ul>
+  <li>
+    <p>Dependency failure</p>
+  </li>
+  <li>
+    <p>Deployment failure</p>
+  </li>
+  <li>
+    <p>Hardware failures</p>
+  </li>
+  <li>
+    <p>Downtime or crashing</p>
+  </li>
+</ul>
+
+<h3 id="ml-specific-failures">
+<a class="anchor" href="#ml-specific-failures" aria-hidden="true"><span class="octicon octicon-link"></span></a>ML-specific failures</h3>
+
+<ul>
+  <li>
+    <p>Production data differing from training data</p>
+
+    <ul>
+      <li>Training data and unseen data should come from a similar distribution. This assumption is incorrect in most cases.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Edge cases</p>
+  </li>
+  <li>
+    <p>Degenerate feedback loops</p>
+
+    <ul>
+      <li>Having visibility into how the model makes predictions - such as measuring the importance of each feature for the model can help detect the bias toward feature X in this case.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="data-distribution-shifts">
+<a class="anchor" href="#data-distribution-shifts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Distribution Shifts</h2>
+
+<p>Data distribution shift refers to the phenomenon in supervised learning when the data a model works with changes over time, which causes the model’s predictions to become less accurate as time passes.</p>
+
+<ul>
+  <li>
+    <p>Covariate shift</p>
+  </li>
+  <li>
+    <p>Label shift</p>
+  </li>
+  <li>
+    <p>Concept shift</p>
+  </li>
+</ul>
+
+<h4 id="detecting-data-distribution-shifts">
+<a class="anchor" href="#detecting-data-distribution-shifts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Detecting Data Distribution Shifts</h4>
+
+<ul>
+  <li>
+    <p>Monitor the model’s accuracy-related-metrics such as accuracy, F1 score, recall, AUC-ROC, etc.</p>
+
+    <ul>
+      <li>
+        <p>Using mean, min, max, std, etc. Check if they are different by a threshold. This method is used by TFDV.</p>
+      </li>
+      <li>
+        <p>Using Hypothesis Testing. Let consider the data from yesterday to be the source population and the data from today to be the target population and they are statistically different, it’s likely that the underlying data distribution has shifted between yesterday and today.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="monitoring-and-observability">
+<a class="anchor" href="#monitoring-and-observability" aria-hidden="true"><span class="octicon octicon-link"></span></a>Monitoring and Observability</h2>
+
+<h2 id="ml-specific-metrics">
+<a class="anchor" href="#ml-specific-metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>ML-specific Metrics</h2>
+
+<p>There are four artifacts to monitor:</p>
+
+<ul>
+  <li>
+    <p>a model’s accuracy-related-metrics</p>
+
+    <ul>
+      <li>This helps to decide whether a model’s performance has degraded.</li>
+    </ul>
+  </li>
+  <li>
+    <p>predictions</p>
+
+    <ul>
+      <li>Prediction distribution shifts are also a proxy for input distribution shifts.</li>
+    </ul>
+  </li>
+  <li>
+    <p>features</p>
+
+    <ul>
+      <li>Feature validation: Great Expectation</li>
+    </ul>
+  </li>
+  <li>
+    <p>raw inputs</p>
+
+    <ul>
+      <li>
+        <p>It is not easy to monitor as it can com from multiple sources in different formats, following multiple structures.</p>
+      </li>
+      <li>
+        <p>This tasks are usually done by the data team, not ML team.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="monitoring-toolbox">
+<a class="anchor" href="#monitoring-toolbox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Monitoring Toolbox</h2>
+
+<ul>
+  <li>
+    <p>Logs</p>
+  </li>
+  <li>
+    <p>Dashboards</p>
+  </li>
+  <li>
+    <p>Alerts</p>
+  </li>
+</ul>
+
+<h2 id="observability">
+<a class="anchor" href="#observability" aria-hidden="true"><span class="octicon octicon-link"></span></a>Observability</h2>
+
+<p>It helps to understand how the entire ML system, which includes ML model, works.</p>
+
+  </div><a class="u-url" href="/minhdg-blog/machine_learning/2023/03/12/DesignMachineLearningSystem.html" hidden></a>
+</article>
