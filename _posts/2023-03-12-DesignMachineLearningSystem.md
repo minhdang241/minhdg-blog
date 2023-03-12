@@ -3,9 +3,9 @@
 toc: true
 layout: post
 description: My note of Design Machine Learning System
-categories: [Machine_Learning]
+categories: [theory, machine_learning, DMLS]
 title: Design Machine Learning System
-image: images/Machine_Learning_System.webp
+image: images/DMLS.png
 
 ---
 
